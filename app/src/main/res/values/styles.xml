@@ -23,12 +23,20 @@ limitations under the License. -->
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
-    <style name="word_title">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">26dp</item>
+    <style name="word_style">
         <item name="android:textSize">24sp</item>
         <item name="android:textStyle">bold</item>
-        <item name="android:layout_marginBottom">6dp</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:layout_margin">3dp</item>
+
+    </style>
+    <style name="button_style">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:background">@drawable/jc_button</item>
+        <item name="android:textColor">@color/colorButtonText</item>
+        <item name="android:gravity">center</item>
+        <item name="android:layout_margin">3dp</item>
     </style>
 
 </resources>

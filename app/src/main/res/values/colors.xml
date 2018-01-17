@@ -14,8 +14,23 @@ See the License for the specific language governing permissions and
 limitations under the License. -->
 
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
-    <color name="buttonLabel">#d3d3d3</color>
+    <color name="colorPrimary">#F44336</color>
+    <color name="colorPrimaryDark">#D32F2F</color>
+    <color name="colorAccent">#C62828</color>
+    <color name="colorBackground1">#FFEBEE</color>
+    <color name="colorBackground2">#FFCDD2</color>
+    <color name="colorPrimaryVariant1">#EF9A9A</color>
+    <color name="colorPrimaryVariant2">#E57373</color>
+    <color name="colorPrimaryVariant3">#EF5350</color>
+    <color name="colorPrimaryVariant4">#E53935</color>
+    <color name="colorPrimaryVariant5">#D32F2F</color>
+    <color name="colorPrimaryVariant6">#C62828</color>
+    <color name="colorButtonBackround">#BCAAA4</color>
+    <color name="colorButton1">#607D8B</color>
+    <color name="colorButton2">#90A4AE</color>
+    <color name="colorButton3">#78909C</color>
+    <color name="colorButton4">#B0BEC5</color>
+    <color name="colorButton5">#CFD8DC</color>
+    <color name="colorButtonText">#263238</color>
+
 </resources>

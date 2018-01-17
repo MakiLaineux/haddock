@@ -19,23 +19,19 @@ limitations under the License. -->
 
     <EditText
         android:id="@+id/edit_word"
+        style="@style/word_style"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:fontFamily="sans-serif-light"
         android:hint="@string/hint_word"
-        android:inputType="textAutoComplete"
-        android:padding="@dimen/small_padding"
-        android:layout_marginBottom="@dimen/big_padding"
-        android:layout_marginTop="@dimen/big_padding"
-        android:textSize="18sp" />
+        />
 
     <Button
         android:id="@+id/button_save"
+        style="@style/button_style"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorPrimary"
         android:onClick="returnReply"
         android:text="@string/button_save"
-        android:textColor="@color/buttonLabel" />
+        />
 
 </LinearLayout>

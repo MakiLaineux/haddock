@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -24,6 +25,8 @@ public class MainActivity extends AppCompatActivity {
     public static final int WORD_ADD = -1;
 
     private RecyclerView mRecyclerView;
+    private DividerItemDecoration mDividerItemDecoration;
+    private LinearLayoutManager mLayoutManager;
     private WordListAdapter mAdapter;
     private WordListOpenHelper mDB;
 
@@ -34,17 +37,23 @@ public class MainActivity extends AppCompatActivity {
 
         // Create database if not exists.
         mDB = new WordListOpenHelper(this);
+
         // Create recycler view.
-        mRecyclerView = (RecyclerView) findViewById(R.id.recyclerview);
+        mRecyclerView = findViewById(R.id.recyclerview);
+        mLayoutManager = new LinearLayoutManager(this);
+        mRecyclerView.setLayoutManager(mLayoutManager);
+        mDividerItemDecoration = new DividerItemDecoration(mRecyclerView.getContext(),
+                mLayoutManager.getOrientation());
+        mRecyclerView.addItemDecoration(mDividerItemDecoration);
+
         // Create an mAdapter and supply the data to be displayed.
         mAdapter = new WordListAdapter(this, mDB);
         // Connect the mAdapter with the recycler view.
         mRecyclerView.setAdapter(mAdapter);
         // Give the recycler view a default layout manager.
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         // Add a floating action click handler for creating new entries.
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

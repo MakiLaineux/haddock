@@ -15,11 +15,11 @@ limitations under the License. -->
 
 <resources>
     <string name="app_name">WordListSQLInteractive</string>
-    <string name="hint_word">Word...</string>
-    <string name="hint_definition">Definition...</string>
+    <string name="hint_word">Enter your word here</string>
     <string name="button_save">Save</string>
     <string name="button_new">New</string>
     <string name="button_edit">Edit</string>
     <string name="button_delete">Delete</string>
     <string name="empty_not_saved">Word not saved because it is empty.</string>
+    <string name="defaultText">Default text</string>
 </resources>
