@@ -11,12 +11,6 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.Toast;
 
-/**
- * Implements a RecyclerView that displays a list of words from a SQL database.
- * - Clicking the fab button opens a second activity to add a word to the database.
- * - Clicking the Edit button opens an activity to edit the current word in the database.
- * - Clicking the Delete button deletes the current word from the database.
- */
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = MainActivity.class.getSimpleName();
@@ -25,7 +19,6 @@ public class MainActivity extends AppCompatActivity {
     public static final int STATEMENT_ADD = -1;
 
     private RecyclerView mRecyclerView;
-    private DividerItemDecoration mDividerItemDecoration;
     private LinearLayoutManager mLayoutManager;
     private WordListAdapter mAdapter;
     private WordListOpenHelper mDB;
@@ -42,9 +35,6 @@ public class MainActivity extends AppCompatActivity {
         mRecyclerView = findViewById(R.id.recyclerview);
         mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLayoutManager);
-        mDividerItemDecoration = new DividerItemDecoration(mRecyclerView.getContext(),
-                mLayoutManager.getOrientation());
-        mRecyclerView.addItemDecoration(mDividerItemDecoration);
 
         // Create an mAdapter and supply the data to be displayed.
         mAdapter = new WordListAdapter(this, mDB);

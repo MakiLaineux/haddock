@@ -40,4 +40,5 @@ limitations under the License. -->
     <string name="criteria5">Vices</string>
     <string name="criteria6">Animalit\é</string>
     <string name="criteria7">Divers</string>
+    <string name="texte_debug">texte debug</string>
 </resources>

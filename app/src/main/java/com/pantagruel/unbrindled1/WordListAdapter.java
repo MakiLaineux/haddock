@@ -26,18 +26,14 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
-/**
- * Implements a simple Adapter for a RecyclerView.
- * Demonstrates how to add a click handler for each item in the ViewHolder.
- */
 public class WordListAdapter extends RecyclerView.Adapter<WordListAdapter.WordViewHolder> {
 
 
     private static final String TAG = WordListAdapter.class.getSimpleName();
     private final LayoutInflater mInflater;
-    Context mContext;
-    WordListOpenHelper mDB;
-    public WordListAdapter(Context context, WordListOpenHelper db) {
+    private Context mContext;
+    private WordListOpenHelper mDB;
+    WordListAdapter(Context context, WordListOpenHelper db) {
         mInflater = LayoutInflater.from(context);
         mContext = context;
         mDB=db;
@@ -45,7 +41,7 @@ public class WordListAdapter extends RecyclerView.Adapter<WordListAdapter.WordVi
 
     @Override
     public WordViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View itemView = mInflater.inflate(R.layout.wordlist_item, parent, false);
+        View itemView = mInflater.inflate(R.layout.card, parent, false);
         return new WordViewHolder(itemView);
     }
 
@@ -98,17 +94,17 @@ public class WordListAdapter extends RecyclerView.Adapter<WordListAdapter.WordVi
      *  Custom view holder with a text view and two buttons.
      */
     class WordViewHolder extends RecyclerView.ViewHolder {
-        public final TextView textItemView;
-        public final TextView profileItemView;
+        final TextView textItemView;
+        final TextView profileItemView;
         Button delete_button;
         Button edit_button;
 
-        public WordViewHolder(View itemView) {
+        WordViewHolder(View itemView) {
             super(itemView);
-            textItemView = (TextView) itemView.findViewById(R.id.text);
-            profileItemView = (TextView) itemView.findViewById(R.id.profile);
-            delete_button = (Button)itemView.findViewById(R.id.delete_button);
-            edit_button = (Button)itemView.findViewById(R.id.edit_button);
+            textItemView = itemView.findViewById(R.id.text);
+            profileItemView = itemView.findViewById(R.id.profile);
+            delete_button = itemView.findViewById(R.id.delete_button);
+            edit_button = itemView.findViewById(R.id.edit_button);
         }
     }
 }
