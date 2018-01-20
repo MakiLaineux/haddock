@@ -14,12 +14,30 @@ See the License for the specific language governing permissions and
 limitations under the License. -->
 
 <resources>
-    <string name="app_name">WordListSQLInteractive</string>
-    <string name="hint_word">Enter your word here</string>
+    <string name="app_name">Statements</string>
+    <string name="hint_word">Enter your statement here</string>
     <string name="button_save">Save</string>
     <string name="button_new">New</string>
     <string name="button_edit">Edit</string>
-    <string name="button_delete">Delete</string>
+    <string name="button_delete">Del</string>
     <string name="empty_not_saved">Word not saved because it is empty.</string>
     <string name="defaultText">Default text</string>
+    <string name="defaultProfile">000000000</string>
+    <string name="statement">Statement</string>
+    <string name="nature">Cible</string>
+    <string name="nature1">Homme</string>
+    <string name="nature2">Femme</string>
+    <string name="nature3">Enfant</string>
+    <string name="styles">Style</string>
+    <string name="styles1">Distingu\é</string>
+    <string name="styles2">Ordinaire</string>
+    <string name="styles3">Vulgaire</string>
+    <string name="criteria">Atteintes</string>
+    <string name="criteria1">Physique</string>
+    <string name="criteria2">Capacit\és</string>
+    <string name="criteria3">Vie sexuelle</string>
+    <string name="criteria4">Ethnique</string>
+    <string name="criteria5">Vices</string>
+    <string name="criteria6">Animalit\é</string>
+    <string name="criteria7">Divers</string>
 </resources>

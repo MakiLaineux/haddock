@@ -33,32 +33,10 @@ import android.widget.TextView;
 public class WordListAdapter extends RecyclerView.Adapter<WordListAdapter.WordViewHolder> {
 
 
-    /**
-     *  Custom view holder with a text view and two buttons.
-     */
-    class WordViewHolder extends RecyclerView.ViewHolder {
-        public final TextView wordItemView;
-        Button delete_button;
-        Button edit_button;
-
-        public WordViewHolder(View itemView) {
-            super(itemView);
-            wordItemView = (TextView) itemView.findViewById(R.id.word);
-            delete_button = (Button)itemView.findViewById(R.id.delete_button);
-            edit_button = (Button)itemView.findViewById(R.id.edit_button);
-        }
-    }
-
     private static final String TAG = WordListAdapter.class.getSimpleName();
-
-    public static final String EXTRA_ID = "ID";
-    public static final String EXTRA_WORD = "WORD";
-    private static final String EXTRA_POSITION = "POSITION";
-
     private final LayoutInflater mInflater;
     Context mContext;
     WordListOpenHelper mDB;
-
     public WordListAdapter(Context context, WordListOpenHelper db) {
         mInflater = LayoutInflater.from(context);
         mContext = context;
@@ -73,36 +51,40 @@ public class WordListAdapter extends RecyclerView.Adapter<WordListAdapter.WordVi
 
     @Override
     public void onBindViewHolder(WordViewHolder holder, int position) {
-        WordItem current = mDB.query(position);
-        holder.wordItemView.setText(current.getWord());
+        Statement current = mDB.query(position);
+        holder.textItemView.setText(current.getText());
+        holder.profileItemView.setText(current.getTextProfile());
         // Keep a reference to the view holder for the click listener
         final WordViewHolder h = holder; // needs to be final for use in callback
-        // Attach a click listener to the DELETE button.
-        holder.delete_button.setOnClickListener(
-                new MyButtonOnClickListener(current.getId(), null)  {
 
-                    @Override
-                    public void onClick(View v ) {
-                        int deleted = mDB.delete(id);
-                        if (deleted >= 0)
-                            notifyItemRemoved(h.getAdapterPosition());
-                    }
-                });
+        // Attach a click listener to the DELETE button.
+        holder.delete_button.setOnClickListener(new MyButtonOnClickListener(
+                current.getId(), null, null)  {
+
+            @Override
+            public void onClick(View v ) {
+                int deleted = mDB.delete(id);
+                if (deleted >= 0)
+                    notifyItemRemoved(h.getAdapterPosition());
+            }
+        });
+
         // Attach a click listener to the EDIT button.
         holder.edit_button.setOnClickListener(new MyButtonOnClickListener(
-                current.getId(), current.getWord()) {
+                current.getId(), current.getText(), current.getTextProfile()) {
 
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(mContext, EditWordActivity.class);
+                Intent intent = new Intent(mContext, EditStatementActivity.class);
 
-                intent.putExtra(EXTRA_ID, id);
-                intent.putExtra(EXTRA_POSITION, h.getAdapterPosition());
-                intent.putExtra(EXTRA_WORD, word);
+                intent.putExtra(Globals.EXTRA_ID, id);
+                intent.putExtra(Globals.EXTRA_POSITION, h.getAdapterPosition());
+                intent.putExtra(Globals.EXTRA_TEXT, text);
+                intent.putExtra(Globals.EXTRA_PROFILE, profile);
 
                 // Start an empty edit activity.
                 ((Activity) mContext).startActivityForResult(
-                        intent, MainActivity.WORD_EDIT);
+                        intent, MainActivity.STATEMENT_EDIT);
             }
         });
     }
@@ -110,6 +92,24 @@ public class WordListAdapter extends RecyclerView.Adapter<WordListAdapter.WordVi
     @Override
     public int getItemCount() {
         return (int) mDB.count();
+    }
+
+    /**
+     *  Custom view holder with a text view and two buttons.
+     */
+    class WordViewHolder extends RecyclerView.ViewHolder {
+        public final TextView textItemView;
+        public final TextView profileItemView;
+        Button delete_button;
+        Button edit_button;
+
+        public WordViewHolder(View itemView) {
+            super(itemView);
+            textItemView = (TextView) itemView.findViewById(R.id.text);
+            profileItemView = (TextView) itemView.findViewById(R.id.profile);
+            delete_button = (Button)itemView.findViewById(R.id.delete_button);
+            edit_button = (Button)itemView.findViewById(R.id.edit_button);
+        }
     }
 }
 

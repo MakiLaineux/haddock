@@ -21,8 +21,8 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = MainActivity.class.getSimpleName();
 
-    public static final int WORD_EDIT = 1;
-    public static final int WORD_ADD = -1;
+    public static final int STATEMENT_EDIT = 1;
+    public static final int STATEMENT_ADD = -1;
 
     private RecyclerView mRecyclerView;
     private DividerItemDecoration mDividerItemDecoration;
@@ -50,7 +50,6 @@ public class MainActivity extends AppCompatActivity {
         mAdapter = new WordListAdapter(this, mDB);
         // Connect the mAdapter with the recycler view.
         mRecyclerView.setAdapter(mAdapter);
-        // Give the recycler view a default layout manager.
 
         // Add a floating action click handler for creating new entries.
         FloatingActionButton fab = findViewById(R.id.fab);
@@ -58,8 +57,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 // Start empty edit activity.
-                Intent intent = new Intent(getBaseContext(), EditWordActivity.class);
-                startActivityForResult(intent, WORD_EDIT);
+                Intent intent = new Intent(getBaseContext(), EditStatementActivity.class);
+                startActivityForResult(intent, STATEMENT_EDIT);
             }
         });
     }
@@ -67,15 +66,18 @@ public class MainActivity extends AppCompatActivity {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == WORD_EDIT) {
+        if (requestCode == STATEMENT_EDIT) {
             if (resultCode == RESULT_OK) {
-                String word = data.getStringExtra(EditWordActivity.EXTRA_REPLY);
-                if (!TextUtils.isEmpty(word)) {
-                    int id = data.getIntExtra(WordListAdapter.EXTRA_ID, -99);
-                    if (id == WORD_ADD) {
-                        mDB.insert(word);
+                Statement statement = new Statement(
+                        data.getStringExtra(Globals.EXTRA_TEXT),
+                        data.getStringExtra(Globals.EXTRA_PROFILE)
+                        );
+                if (!TextUtils.isEmpty(statement.getText())) {
+                    int id = data.getIntExtra(Globals.EXTRA_ID, -99);
+                    if (id == STATEMENT_ADD) {
+                        mDB.insert(statement);
                     } else if (id >= 0) {
-                        mDB.update(id, word);
+                        mDB.update(id, statement);
                     }
                     mAdapter.notifyDataSetChanged();
                 } else {

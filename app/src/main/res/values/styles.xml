@@ -24,7 +24,7 @@ limitations under the License. -->
     </style>
 
     <style name="word_style">
-        <item name="android:textSize">24sp</item>
+        <item name="android:textSize">20sp</item>
         <item name="android:textStyle">bold</item>
         <item name="android:gravity">center_vertical</item>
         <item name="android:layout_margin">3dp</item>
@@ -32,7 +32,7 @@ limitations under the License. -->
     </style>
     <style name="button_style">
         <item name="android:textSize">14sp</item>
-        <item name="android:textStyle">bold</item>
+        <item name="android:textStyle">normal</item>
         <item name="android:background">@drawable/jc_button</item>
         <item name="android:textColor">@color/colorButtonText</item>
         <item name="android:gravity">center</item>
