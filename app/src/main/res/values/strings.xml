@@ -41,4 +41,11 @@ limitations under the License. -->
     <string name="criteria6">Animalit\é</string>
     <string name="criteria7">Divers</string>
     <string name="texte_debug">texte debug</string>
+    <string name="toast_short_click">Click court sur :</string>
+    <string name="toast_long_click">Click long sur :</string>
+    <string name="retour_edit">Retour EDIT</string>
+    <string name="impossible_return">Error 695</string>
+    <string name="ko_return">Retour KO</string>
+    <string name="retour_add">retour ADD</string>
+    <string name="noText">NO TEXT</string>
 </resources>

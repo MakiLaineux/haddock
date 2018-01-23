@@ -23,12 +23,17 @@ limitations under the License. -->
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
-    <style name="word_style">
+    <style name="bar_style">
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:layout_margin">15dp</item>
+        <item name="android:background">@color/colorMarked</item>
+    </style>
+    <style name="statement_style">
         <item name="android:textSize">20sp</item>
         <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/colorButtonText</item>
         <item name="android:gravity">center_vertical</item>
-        <item name="android:layout_margin">3dp</item>
-
+        <item name="android:layout_margin">15dp</item>
     </style>
     <style name="button_style">
         <item name="android:textSize">14sp</item>

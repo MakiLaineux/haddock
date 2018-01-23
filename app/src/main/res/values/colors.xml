@@ -24,7 +24,8 @@ limitations under the License. -->
     <color name="colorPrimaryVariant3">#EF5350</color>
     <color name="colorPrimaryVariant4">#E53935</color>
     <color name="colorPrimaryVariant5">#D32F2F</color>
-    <color name="colorPrimaryVariant6">#C62828</color>
+    <color name="colorCard">#EF9A9A</color>
+    <color name="colorMarked">#C62828</color>
     <color name="colorButtonBackround">#BCAAA4</color>
     <color name="colorButton1">#607D8B</color>
     <color name="colorButton2">#90A4AE</color>

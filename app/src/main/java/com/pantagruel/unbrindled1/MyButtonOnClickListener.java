@@ -19,7 +19,7 @@ package com.pantagruel.unbrindled1;
 import android.view.View;
 
 /**
- * Instantiated for the Edit and Delete buttons in WordListAdapter.
+ * Instantiated for the Edit and Delete buttons in StatementAdapter.
  */
 public class MyButtonOnClickListener implements View.OnClickListener {
     private static final String TAG = View.OnClickListener.class.getSimpleName();
@@ -27,6 +27,7 @@ public class MyButtonOnClickListener implements View.OnClickListener {
     int id;
     String text;
     String profile;
+    int status;
 
     public MyButtonOnClickListener(int id, String text, String profile) {
         this.id = id;
@@ -35,6 +36,6 @@ public class MyButtonOnClickListener implements View.OnClickListener {
     }
 
     public void onClick(View v) {
-        // Implemented in WordListAdapter
+        // Implemented in StatementAdapter
     }
 }

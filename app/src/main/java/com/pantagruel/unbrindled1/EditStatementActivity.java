@@ -37,7 +37,8 @@ public class EditStatementActivity extends AppCompatActivity {
     private EditText mEditTextView;
     public CheckBox[] mProfileCheckBox = new CheckBox[Profile.NB_CHECKBOX];
 
-    int mId = MainActivity.STATEMENT_ADD;
+    int mSatementStatus = Globals.STATUS_NONE;
+    int mId = NO_ID;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -62,13 +63,15 @@ public class EditStatementActivity extends AppCompatActivity {
 
         // If we are passed content, fill it in for the user to edit.
         if (extras != null) {
-            int id = extras.getInt(Globals.EXTRA_ID, NO_ID);
+            mId = extras.getInt(Globals.EXTRA_ID, NO_ID);
             Statement statement = new Statement(
+                    mId,
                     extras.getString(Globals.EXTRA_TEXT, NO_WORD),
-                    extras.getString(Globals.EXTRA_PROFILE, NO_WORD)
+                    extras.getString(Globals.EXTRA_PROFILE, NO_WORD),
+                    extras.getInt(Globals.EXTRA_STATUS, Globals.STATUS_NONE)
             );
-            if (id != NO_ID && statement.getText() != NO_WORD) {
-                mId = id;
+            mSatementStatus = statement.getStatus(); // remember whether an edited statement is marked
+            if (mId != NO_ID && statement.getText() != NO_WORD) {
                 mEditTextView.setText(statement.getText());
                 for (int i=0; i<Profile.NB_CHECKBOX ; i++) {
                     mProfileCheckBox[i].setChecked(statement.getProfile().isChecked(i));
@@ -100,9 +103,10 @@ public class EditStatementActivity extends AppCompatActivity {
 
         // Reply
         Intent replyIntent = new Intent();
+        replyIntent.putExtra(Globals.EXTRA_ID, mId);
         replyIntent.putExtra(Globals.EXTRA_TEXT, text);
         replyIntent.putExtra(Globals.EXTRA_PROFILE, p.toString());
-        replyIntent.putExtra(Globals.EXTRA_ID, mId);
+        replyIntent.putExtra(Globals.EXTRA_STATUS, p.toString());
         setResult(RESULT_OK, replyIntent);
         finish();
     }
