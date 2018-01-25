@@ -3,24 +3,40 @@
     package="com.pantagruel.unbrindled1">
 
     <application
-        android:name="com.pantagruel.unbrindled1.Globals"
+        android:name=".App"
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/megaoutrage"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name="com.pantagruel.unbrindled1.MainActivity">
+        <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
         </activity>
-        <activity android:name="com.pantagruel.unbrindled1.EditStatementActivity"
+        <activity
+            android:name=".ManageListActivity"
+            android:parentActivityName=".MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity" />
+        </activity>
+        <activity
+            android:name=".EditStatementActivity"
+            android:parentActivityName=".ManageListActivity"
             android:windowSoftInputMode="stateHidden">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ManageListActivity" />
         </activity>
-
+        <activity android:name=".ProfileActivity"
+            android:parentActivityName=".MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity" />
+        </activity>
     </application>
 
 </manifest>

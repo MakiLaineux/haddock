@@ -7,6 +7,8 @@ import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
+import java.util.Vector;
+
 /**
  * Created by MAKI LAINEUX on 21/01/2018.
  */
@@ -31,56 +33,96 @@ public class BddLocale {
 
     // Get one statement from its bdd key
     public Statement getOneStatementFromIdBdd(int idBdd){
-        String where = Globals.STATEMENT_COL_ID+ " = \"" + idBdd + "\"";
+        String where = App.STATEMENT_COL_ID+ " = \"" + idBdd + "\"";
         try {
             if (mBdd == null) {mBdd = mOpenHelper.getWritableDatabase();}
             if (c != null) c.close();
-            c = mBdd.query(Globals.TABLE_STATEMENT, new String[]{
-                Globals.STATEMENT_COL_ID,
-                Globals.STATEMENT_COL_TEXT,
-                Globals.STATEMENT_COL_PROFILE,
-                Globals.STATEMENT_COL_STATUS,
+            c = mBdd.query(App.TABLE_STATEMENT, new String[]{
+                App.STATEMENT_COL_ID,
+                App.STATEMENT_COL_TEXT,
+                App.STATEMENT_COL_PROFILE,
+                App.STATEMENT_COL_STATUS,
                 },
                 where, null, null, null, null);
         } catch (Exception e) {
-            Log.e(Globals.TAG, "GetOneStatement EXCEPTION! " + e);
+            Log.e(App.TAG, "GetOneStatement EXCEPTION! " + e);
             return null;
         }
         Statement s = new Statement(
                 idBdd,
-                c.getString(Globals.STATEMENT_NUM_COL_TEXT),
-                c.getString(Globals.STATEMENT_NUM_COL_PROFILE),
-                c.getInt(Globals.STATEMENT_NUM_COL_STATUS)
+                c.getString(App.STATEMENT_NUM_COL_TEXT),
+                c.getString(App.STATEMENT_NUM_COL_PROFILE),
+                c.getInt(App.STATEMENT_NUM_COL_STATUS)
         );
         return s;
     }
 
-    // Get a cursor with all statements matching given status and profile
-    public Cursor getAllStatement(int paramStatut, Profile paramProfile){
-        String where;
-        switch (paramStatut) {
-            case Globals.STATUS_ALL:
-                where = null;
-                break;
-            case Globals.STATUS_MARKED:
-                where = Globals.STATEMENT_COL_STATUS + " = " + Integer.toString(Globals.STATUS_MARKED);
-                break;
-            default: where = null;break;
-        }
+    // Get a vector with all statements matching given status and profile
+    public Vector<Statement> getStatementVector(){
+        Statement s;
+        Vector<Statement> v = new Vector<Statement>();
+
+        // First get a Cursor with records matching the status
+        String where = null;
+        if (App.scope == App.STATUS_MARKED)
+            where = App.STATEMENT_COL_STATUS + " = " + Integer.toString(App.STATUS_MARKED);
         try {
             if (mBdd == null) {mBdd = mOpenHelper.getWritableDatabase();}
             if (c != null) c.close();
-            c = mBdd.query(Globals.TABLE_STATEMENT, new String[]{
-                        Globals.STATEMENT_COL_ID,
-                        Globals.STATEMENT_COL_TEXT,
-                        Globals.STATEMENT_COL_PROFILE,
-                        Globals.STATEMENT_COL_STATUS,
-                },
-                where, null, null, null, Globals.STATEMENT_COL_TEXT+" ASC");
+            c = mBdd.query(App.TABLE_STATEMENT, new String[]{
+                            App.STATEMENT_COL_ID,
+                            App.STATEMENT_COL_TEXT,
+                            App.STATEMENT_COL_PROFILE,
+                            App.STATEMENT_COL_STATUS,
+                    },
+                    where, null, null, null, App.STATEMENT_COL_TEXT+" ASC");
         } catch (Exception e) {
-            Log.e(Globals.TAG, "GetAllStatements EXCEPTION! " + e);
+            Log.e(App.TAG, "GetAllStatements EXCEPTION! " + e);
             return null;
         }
+        if (c == null) return null;
+
+        // then fill the vector with items matching the profile
+        c.moveToFirst();
+        for (int i = 0; i < c.getCount(); i++) {
+            s = new Statement(
+                    c.getInt(App.STATEMENT_NUM_COL_ID),
+                    c.getString(App.STATEMENT_NUM_COL_TEXT),
+                    c.getString(App.STATEMENT_NUM_COL_PROFILE),
+                    c.getInt(App.STATEMENT_NUM_COL_STATUS)
+            );
+            if (s.matchesProfile(App.currentProfile))
+                v.add(s);
+            c.moveToNext();
+        }
+        return v;
+    }
+
+
+        // Get a cursor with all statements matching given status and profile
+    public Cursor getAllStatement(int paramStatut, Profile paramProfile){
+        // get a Cursor with records matching the status, then remove items not matching the profile
+
+        String where = null;
+        if (paramStatut == App.STATUS_MARKED)
+            where = App.STATEMENT_COL_STATUS + " = " + Integer.toString(App.STATUS_MARKED);
+
+        try {
+            if (mBdd == null) {mBdd = mOpenHelper.getWritableDatabase();}
+            if (c != null) c.close();
+            c = mBdd.query(App.TABLE_STATEMENT, new String[]{
+                        App.STATEMENT_COL_ID,
+                        App.STATEMENT_COL_TEXT,
+                        App.STATEMENT_COL_PROFILE,
+                        App.STATEMENT_COL_STATUS,
+                },
+                where, null, null, null, App.STATEMENT_COL_TEXT+" ASC");
+        } catch (Exception e) {
+            Log.e(App.TAG, "GetAllStatements EXCEPTION! " + e);
+            return null;
+        }
+        if (c == null) return null;
+
         return c;
     }
 
@@ -88,10 +130,10 @@ public class BddLocale {
         int deleted = 0;
         try {
             if (mBdd == null) {mBdd = mOpenHelper.getWritableDatabase();}
-            deleted = mBdd.delete(Globals.TABLE_STATEMENT,
-                    Globals.STATEMENT_COL_ID + " = ? ", new String[]{String.valueOf(statement.getId())});
+            deleted = mBdd.delete(App.TABLE_STATEMENT,
+                    App.STATEMENT_COL_ID + " = ? ", new String[]{String.valueOf(statement.getId())});
         } catch (Exception e) {
-            Log.e (Globals.TAG, "DELETE EXCEPTION! " + e.getMessage());
+            Log.e (App.TAG, "DELETE EXCEPTION! " + e.getMessage());
         }
         return deleted;
     }
@@ -101,16 +143,16 @@ public class BddLocale {
         try {
             if (mBdd == null) {mBdd = mOpenHelper.getWritableDatabase();}
             ContentValues values = new ContentValues();
-            values.put(Globals.STATEMENT_COL_TEXT, statement.getText());
-            values.put(Globals.STATEMENT_COL_PROFILE, statement.getTextProfile());
-            values.put(Globals.STATEMENT_COL_STATUS, statement.getStatus());
-            mNumberOfRowsUpdated = mBdd.update(Globals.TABLE_STATEMENT,
+            values.put(App.STATEMENT_COL_TEXT, statement.getText());
+            values.put(App.STATEMENT_COL_PROFILE, statement.getTextProfile());
+            values.put(App.STATEMENT_COL_STATUS, statement.getStatus());
+            mNumberOfRowsUpdated = mBdd.update(App.TABLE_STATEMENT,
                     values,
-                    Globals.STATEMENT_COL_ID + " = ?",
+                    App.STATEMENT_COL_ID + " = ?",
                     new String[]{String.valueOf(statement.getId())});
-            Log.d(Globals.TAG, "number of rows uopdated : "+mNumberOfRowsUpdated);
+            Log.d(App.TAG, "number of rows uopdated : "+mNumberOfRowsUpdated);
         } catch (Exception e) {
-            Log.e(Globals.TAG, "UPDATE EXCEPTION! " + e.getMessage());
+            Log.e(App.TAG, "UPDATE EXCEPTION! " + e.getMessage());
         }
         return mNumberOfRowsUpdated;
     }
@@ -118,32 +160,32 @@ public class BddLocale {
     public long insertOneStatement(Statement statement){
         long newId = 0;
         ContentValues values = new ContentValues();
-        values.put(Globals.STATEMENT_COL_TEXT, statement.getText());
-        values.put(Globals.STATEMENT_COL_PROFILE, statement.getTextProfile());
-        values.put(Globals.STATEMENT_COL_STATUS, Globals.STATUS_NORMAL);
+        values.put(App.STATEMENT_COL_TEXT, statement.getText());
+        values.put(App.STATEMENT_COL_PROFILE, statement.getTextProfile());
+        values.put(App.STATEMENT_COL_STATUS, App.STATUS_NORMAL);
         try {
             if (mBdd == null) {mBdd = mOpenHelper.getWritableDatabase();}
-            newId = mBdd.insert(Globals.TABLE_STATEMENT, null, values);
+            newId = mBdd.insert(App.TABLE_STATEMENT, null, values);
         } catch (Exception e) {
-            Log.e(Globals.TAG, "INSERT EXCEPTION! " + e.getMessage());
+            Log.e(App.TAG, "INSERT EXCEPTION! " + e.getMessage());
         }
-        Log.d(Globals.TAG, "insert newid = "+newId);
+        Log.d(App.TAG, "insert newid = "+newId);
         return newId;
     }
 
     public long count() {
         if (mBdd == null) {mBdd = mOpenHelper.getWritableDatabase();}
-        return DatabaseUtils.queryNumEntries(mBdd, Globals.TABLE_STATEMENT);
+        return DatabaseUtils.queryNumEntries(mBdd, App.TABLE_STATEMENT);
     }
 
     public int toggleStatutFavori(Statement statement) {
         int newStatus;
         switch (statement.getStatus()) {
-            case Globals.STATUS_NORMAL :
-            case Globals.STATUS_NONE :
-                newStatus = Globals.STATUS_MARKED; break;
-            case Globals.STATUS_MARKED :
-                newStatus = Globals.STATUS_NORMAL; break;
+            case App.STATUS_NORMAL :
+            case App.STATUS_NONE :
+                newStatus = App.STATUS_MARKED; break;
+            case App.STATUS_MARKED :
+                newStatus = App.STATUS_NORMAL; break;
             default:
                 newStatus = statement.getStatus(); break;
         }

@@ -28,7 +28,15 @@ limitations under the License. -->
         <item name="android:layout_margin">15dp</item>
         <item name="android:background">@color/colorMarked</item>
     </style>
-    <style name="statement_style">
+    <style name="statement_main_style">
+        <item name="android:textSize">40sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/colorButtonText</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:layout_margin">15dp</item>
+    </style>
+    <style name="statement_item_style">
         <item name="android:textSize">20sp</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textColor">@color/colorButtonText</item>
@@ -38,7 +46,6 @@ limitations under the License. -->
     <style name="button_style">
         <item name="android:textSize">14sp</item>
         <item name="android:textStyle">normal</item>
-        <item name="android:background">@drawable/jc_button</item>
         <item name="android:textColor">@color/colorButtonText</item>
         <item name="android:gravity">center</item>
         <item name="android:layout_margin">3dp</item>

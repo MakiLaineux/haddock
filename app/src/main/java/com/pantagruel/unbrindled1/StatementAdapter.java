@@ -16,33 +16,26 @@
 
 package com.pantagruel.unbrindled1;
 
-import android.app.Activity;
-import android.content.Context;
-import android.content.Intent;
-import android.database.Cursor;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
+
+import java.util.Vector;
 
 public class StatementAdapter extends RecyclerView.Adapter<StatementAdapter.StatementViewHolder> {
 
 
     private static final String TAG = StatementAdapter.class.getSimpleName();
     private final LayoutInflater mInflater;
-    private BddLocale mBaseLocale = null;
-    private Cursor mCursorStatement;    // statements in the RV
-    private int mCount;             // nombre d'items
-    private int mScope;             // display scope (all, marked only...)
+    private Vector<Statement> mStatementVector;
 
 
     /**
      *  Custom view holder with a text view and two buttons.
      */
     class StatementViewHolder extends RecyclerView.ViewHolder {
-        View vhBarreFavori;
         final TextView vhStatementText;
         final TextView vhStatementProfile;
         final View vhStatementBarreFavori;
@@ -54,25 +47,15 @@ public class StatementAdapter extends RecyclerView.Adapter<StatementAdapter.Stat
         }
     }
 
-    StatementAdapter(int scope) {
-        if (mBaseLocale == null) {
-            mBaseLocale = new BddLocale(Globals.context);
-            mBaseLocale.open();
-        }
-        mScope = scope;
-        loadData(mScope);
-        mInflater = LayoutInflater.from(Globals.context);
+    StatementAdapter() {
+        loadData();
+        mInflater = LayoutInflater.from(App.context);
     }
 
-    public void loadData(int typeAffichage) {
-        if (mCursorStatement != null) mCursorStatement.close();
-        mCursorStatement = mBaseLocale.getAllStatement(typeAffichage, null);
-        if (mCursorStatement == null) {
-            mCount = 0;
-            return;
-        }
-        mCount = mCursorStatement.getCount();
+    public void loadData() {
+        mStatementVector = App.mBaseLocale.getStatementVector();
     }
+
     @Override
     public StatementViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = mInflater.inflate(R.layout.card, parent, false);
@@ -82,57 +65,46 @@ public class StatementAdapter extends RecyclerView.Adapter<StatementAdapter.Stat
     @Override
     public void onBindViewHolder(StatementViewHolder holder, int position) {
 
-        mCursorStatement.moveToPosition(position);
-        Statement statement = new Statement(
-                mCursorStatement.getInt(Globals.STATEMENT_NUM_COL_ID),
-                mCursorStatement.getString(Globals.STATEMENT_NUM_COL_TEXT),
-                mCursorStatement.getString(Globals.STATEMENT_NUM_COL_PROFILE),
-                mCursorStatement.getInt(Globals.STATEMENT_NUM_COL_STATUS)
-                );
-
-        holder.vhStatementText.setText(statement.getText());
-        holder.vhStatementProfile.setText(statement.getTextProfile());
+        // fill from the vector
+        holder.vhStatementText.setText(mStatementVector.elementAt(position).getText());
+        holder.vhStatementProfile.setText(mStatementVector.elementAt(position).getTextProfile());
 
         // Color of the mark bar
-        if (statement.getStatus() == Globals.STATUS_MARKED)
+        if (mStatementVector.elementAt(position).getStatus() == App.STATUS_MARKED)
             holder.vhStatementBarreFavori.setBackgroundResource(R.color.colorMarked);
         else
             holder.vhStatementBarreFavori.setBackgroundResource(R.color.colorCard);
     }
 
     public Statement getStatementFromPosition (int pos){
-        if ((mCursorStatement == null) || !mCursorStatement.moveToPosition(pos)) return null;
-        Statement statement = new Statement(
-                mCursorStatement.getInt(Globals.STATEMENT_NUM_COL_ID),
-                mCursorStatement.getString(Globals.STATEMENT_NUM_COL_TEXT),
-                mCursorStatement.getString(Globals.STATEMENT_NUM_COL_PROFILE),
-                mCursorStatement.getInt(Globals.STATEMENT_NUM_COL_STATUS)
-        );
-        return statement;
+        if (mStatementVector == null)
+            return null;
+        else
+            return mStatementVector.elementAt(pos);
     }
 
     public boolean toggleFavori (Statement statement){
-        if (mBaseLocale.toggleStatutFavori(statement) == 1) return true;
+        if (App.mBaseLocale.toggleStatutFavori(statement) == 1) return true;
         else return false;
     }
 
     @Override
     public int getItemCount() {
-        return mCount;
+        return (mStatementVector == null) ? 0 : mStatementVector.size();
     }
 
     public void insertStatement(Statement statement) {
-        mBaseLocale.insertOneStatement(statement);
+        App.mBaseLocale.insertOneStatement(statement);
         notifyDataSetChanged();
     }
 
     public void updateStatement(Statement statement) {
-        mBaseLocale.updateOneStatement(statement);
+        App.mBaseLocale.updateOneStatement(statement);
         notifyDataSetChanged();
     }
 
     public void removeStatement(Statement statement) {
-        mBaseLocale.removeOneStatement(statement);
+        App.mBaseLocale.removeOneStatement(statement);
         notifyDataSetChanged();
     }
 }

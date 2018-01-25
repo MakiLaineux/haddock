@@ -33,7 +33,7 @@
 
         <TextView
             android:id="@+id/text"
-            style="@style/statement_style"
+            style="@style/statement_item_style"
             android:layout_width="wrap_content"
             android:layout_height="@dimen/word_height"
             android:layout_alignParentTop="true"

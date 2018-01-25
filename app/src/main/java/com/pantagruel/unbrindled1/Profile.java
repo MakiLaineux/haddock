@@ -1,8 +1,8 @@
 package com.pantagruel.unbrindled1;
 
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.util.Log;
-
-import java.util.HashMap;
 
 /**
  * Created by MAKI LAINEUX on 17/01/2018.
@@ -24,16 +24,20 @@ public class Profile {
     public Profile(){
     }
 
+    public Profile(boolean[] boolArray){
+        this.flag = boolArray;
+    }
+
     public boolean isChecked(int i){return flag[i];}
     public void setChecked(int i, boolean b){flag[i]=b;}
 
     public void feedFromString (String s){
         if (s.length() != NB_CHECKBOX) {
-            Log.e(Globals.TAG, "feedFromString : String length does not match Profile length : Z" + s + "Z" );
+            Log.e(App.TAG, "feedFromString : String length does not match Profile length : Z" + s + "Z" );
             return;           
         }
         else
-            Log.d(Globals.TAG, "feedFromString : Profile : Z" + s + "Z");
+            Log.d(App.TAG, "feedFromString : Profile : Z" + s + "Z");
         for (int i =0 ; i < NB_CHECKBOX ; i++)
             this.flag[i] = (s.charAt(i) == 'X');
     }
@@ -49,9 +53,18 @@ public class Profile {
         for (int i =0 ; i < NB_CHECKBOX ; i++)
             buffer.append(flag[i] ? 'X' : ' ');
 
-        Log.d(Globals.TAG, "toString : Text : Z" + buffer.toString() + "Z");
+        Log.d(App.TAG, "toString : Text : Z" + buffer.toString() + "Z");
         
         return(buffer.toString());
+    }
+
+    // build profile from user preferences
+    public void feedFromPreferences(){
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(App.context);
+        for (int i = 0; i<Profile.NB_CHECKBOX ; i++) {
+            String prefName = App.PROFILE_BOOL + Integer.toString(i);
+            flag[i] = sharedPref.getBoolean(prefName, true);
+        }
     }
 
 
@@ -63,7 +76,7 @@ public class Profile {
         // at least one nature must match
         boolean match = false;
         for (int i =0 ; i < NB_CHECKBOX_NATURE ; i++) {
-            if (flag[j] == p.flag[j]) match = true;
+            if (flag[j] && p.flag[j]) match = true;
             j++;
         }
         if (!match) return false;
@@ -72,7 +85,7 @@ public class Profile {
         // at least one style must match
         match = false;
         for (int i =0 ; i < NB_CHECKBOX_STYLE ; i++) {
-            if (flag[j] == p.flag[j]) match = true;
+            if (flag[j] && p.flag[j]) match = true;
             j++;
         }
         if (!match) return false;
@@ -80,11 +93,10 @@ public class Profile {
         // at least one criteria must match
         match = false;
         for (int i =0 ; i < NB_CHECKBOX_CRITERIA ; i++) {
-            if (flag[j] == p.flag[j]) match = true;
+            if (flag[j] && p.flag[j]) match = true;
             j++;
         }
         return match;
-
     }
 }
 

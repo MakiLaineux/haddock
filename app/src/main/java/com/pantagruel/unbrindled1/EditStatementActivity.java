@@ -37,8 +37,9 @@ public class EditStatementActivity extends AppCompatActivity {
     private EditText mEditTextView;
     public CheckBox[] mProfileCheckBox = new CheckBox[Profile.NB_CHECKBOX];
 
-    int mSatementStatus = Globals.STATUS_NONE;
+    int mStatementStatus = App.STATUS_NONE;
     int mId = NO_ID;
+    int mRequestCode = App.REQUEST_NONE;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -56,27 +57,34 @@ public class EditStatementActivity extends AppCompatActivity {
 
         // Get data sent from calling activity.
         Bundle extras = getIntent().getExtras();
+        if (extras == null){
+            finish();
+        } else {
+            mRequestCode = extras.getInt(App.EXTRA_REQUEST, App.REQUEST_NONE);
+        }
 
         // Init display
-        mEditTextView.setText("");
-        for (int i=0; i<Profile.NB_CHECKBOX ; i++) mProfileCheckBox[i].setChecked(false);
-
-        // If we are passed content, fill it in for the user to edit.
-        if (extras != null) {
-            mId = extras.getInt(Globals.EXTRA_ID, NO_ID);
-            Statement statement = new Statement(
-                    mId,
-                    extras.getString(Globals.EXTRA_TEXT, NO_WORD),
-                    extras.getString(Globals.EXTRA_PROFILE, NO_WORD),
-                    extras.getInt(Globals.EXTRA_STATUS, Globals.STATUS_NONE)
-            );
-            mSatementStatus = statement.getStatus(); // remember whether an edited statement is marked
-            if (mId != NO_ID && statement.getText() != NO_WORD) {
+        switch (mRequestCode){
+            case App.REQUEST_ADD:
+                mEditTextView.setText("");
+                for (int i=0; i<Profile.NB_CHECKBOX ; i++) mProfileCheckBox[i].setChecked(false);
+                break;
+            case App.REQUEST_EDIT:
+                mId = extras.getInt(App.EXTRA_ID, NO_ID);
+                Statement statement = new Statement(
+                        mId,
+                        extras.getString(App.EXTRA_TEXT, NO_WORD),
+                        extras.getString(App.EXTRA_PROFILE, NO_WORD),
+                        extras.getInt(App.EXTRA_STATUS, App.STATUS_NONE)
+                );
+                mStatementStatus = statement.getStatus(); // remember whether an edited statement is marked
                 mEditTextView.setText(statement.getText());
                 for (int i=0; i<Profile.NB_CHECKBOX ; i++) {
                     mProfileCheckBox[i].setChecked(statement.getProfile().isChecked(i));
                 }
-            }
+                break;
+            default:
+                finish();
         }
     }
 
@@ -103,10 +111,10 @@ public class EditStatementActivity extends AppCompatActivity {
 
         // Reply
         Intent replyIntent = new Intent();
-        replyIntent.putExtra(Globals.EXTRA_ID, mId);
-        replyIntent.putExtra(Globals.EXTRA_TEXT, text);
-        replyIntent.putExtra(Globals.EXTRA_PROFILE, p.toString());
-        replyIntent.putExtra(Globals.EXTRA_STATUS, p.toString());
+        replyIntent.putExtra(App.EXTRA_ID, mId);
+        replyIntent.putExtra(App.EXTRA_TEXT, text);
+        replyIntent.putExtra(App.EXTRA_PROFILE, p.toString());
+        replyIntent.putExtra(App.EXTRA_STATUS, p.toString());
         setResult(RESULT_OK, replyIntent);
         finish();
     }

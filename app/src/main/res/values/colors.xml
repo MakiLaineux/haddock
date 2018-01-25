@@ -33,5 +33,6 @@ limitations under the License. -->
     <color name="colorButton4">#B0BEC5</color>
     <color name="colorButton5">#CFD8DC</color>
     <color name="colorButtonText">#263238</color>
+    <color name="ic_launcher_background">#EF5350</color>
 
 </resources>

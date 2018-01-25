@@ -7,9 +7,9 @@ public class Statement {
 	private int status;
 
 	public Statement() {
-		this.id = Globals.NOID;
-		this.text = Globals.NOTEXT;
-		this.status = Globals.STATUS_NONE;
+		this.id = App.NOID;
+		this.text = App.NOTEXT;
+		this.status = App.STATUS_NONE;
 		this.profile = new Profile();
 	}
 
