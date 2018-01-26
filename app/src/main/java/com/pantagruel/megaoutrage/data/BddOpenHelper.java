@@ -1,11 +1,12 @@
-package com.pantagruel.unbrindled1;
+package com.pantagruel.megaoutrage.data;
 
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
-import android.widget.Toast;
+
+import com.pantagruel.megaoutrage.App;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -17,9 +18,11 @@ import java.io.InputStreamReader;
 
 public class BddOpenHelper extends SQLiteOpenHelper {
 
-    private static final String TAG = BddOpenHelper.class.getSimpleName();
+    private final String TAG = this.getClass().getSimpleName();
+
     // string array of columns.
     private static final String[] COLUMNS = { App.STATEMENT_COL_ID, App.STATEMENT_COL_TEXT, App.STATEMENT_COL_PROFILE };
+    private Context mContext;
 
     // Build the SQL query that creates the table.
     private static final String STATEMENT_LIST_TABLE_CREATE =
@@ -31,7 +34,7 @@ public class BddOpenHelper extends SQLiteOpenHelper {
 
     public BddOpenHelper(Context context) {
         super(context, App.DATABASE_NAME, null, App.DATABASE_VERSION);
-        Log.d(TAG, "Construct BddOpenHelper");
+        mContext = context;
 
     }
     @Override
@@ -42,9 +45,7 @@ public class BddOpenHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        Log.w(BddOpenHelper.class.getName(),
-                "Upgrading database from version " + oldVersion + " to "
-                        + newVersion + ", which will destroy all old data");
+        Log.d(TAG, "BDD Upgrade");
         db.execSQL("DROP TABLE IF EXISTS " + App.TABLE_STATEMENT);
         onCreate(db);
     }
@@ -56,7 +57,7 @@ public class BddOpenHelper extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
 
         try {
-            BufferedReader buf = new BufferedReader(new InputStreamReader(App.context.getAssets().open("fill.txt"), "ISO-8859-1"));
+            BufferedReader buf = new BufferedReader(new InputStreamReader(mContext.getAssets().open("fill.txt"), "ISO-8859-1"));
             while ((ligne = buf.readLine()) != null) {
                 if (ligne.length() <= Profile.NB_CHECKBOX) continue;
                 String strProfile = ligne.substring(0,13);
@@ -71,13 +72,9 @@ public class BddOpenHelper extends SQLiteOpenHelper {
             buf.close();
 
         } catch (ArrayIndexOutOfBoundsException e) {
-            Toast.makeText(App.context, "Problème dans le format du fichier Assets", Toast.LENGTH_SHORT).show();
         } catch (IOException e) {
-            Toast.makeText(App.context, "IOException fillDatabaseWithData", Toast.LENGTH_SHORT).show();
         } catch (java.lang.NullPointerException e) {
-            Toast.makeText(App.context, "NullPointer dans fillDatabaseWithData", Toast.LENGTH_SHORT).show();
         } catch (java.lang.RuntimeException e) {
-            Toast.makeText(App.context, "RunTime Exception dans FillDatabaseWithData", Toast.LENGTH_SHORT).show();
         }
         return bOK;
         }

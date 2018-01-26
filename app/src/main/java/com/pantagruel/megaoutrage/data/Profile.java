@@ -1,14 +1,18 @@
-package com.pantagruel.unbrindled1;
+package com.pantagruel.megaoutrage.data;
 
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.util.Log;
+
+import com.pantagruel.megaoutrage.App;
 
 /**
  * Created by MAKI LAINEUX on 17/01/2018.
  */
 
 public class Profile {
+
+    private final String TAG = this.getClass().getSimpleName();
 
     // must match the number of boolean members of the class
     public static final int NB_CHECKBOX = 13;
@@ -69,7 +73,7 @@ public class Profile {
 
 
     public boolean matches(Profile p){
-        // returns true if natures match, styles also match, and criterias also match
+        // returns true if natures match, styles also match, and layout_criterias also match
 
         int j=0;
 

@@ -1,30 +1,31 @@
-package com.pantagruel.unbrindled1;
+package com.pantagruel.megaoutrage.activities;
 
-import android.content.Context;
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.animation.AccelerateDecelerateInterpolator;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.widget.Button;
+import android.view.animation.LinearInterpolator;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.pantagruel.megaoutrage.App;
+import com.pantagruel.megaoutrage.R;
+import com.pantagruel.megaoutrage.data.Statement;
+
+import java.util.ArrayList;
 import java.util.Random;
-import java.util.Vector;
 
 public class MainActivity extends AppCompatActivity {
-    private Vector<Statement> mStatementsStock;
+    private final String TAG = this.getClass().getSimpleName();
+    private ArrayList<Statement> mStatementsStock;
     private ImageButton mButton;
     private TextView mTextView, mTextStock;
     private Menu mMenu;
+    String mText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,7 +36,15 @@ public class MainActivity extends AppCompatActivity {
         mTextStock = findViewById(R.id.txt_stock);
         mButton = findViewById(R.id.button_statement);
 
-        loadStatements();
+        if (savedInstanceState != null) {
+            mTextView.setText(savedInstanceState.getString("currentText"));
+            mStatementsStock = savedInstanceState.getParcelableArrayList("currentList");
+            mTextStock.setText(String.valueOf(mStatementsStock.size()));
+        } else {
+            loadStatements();
+        }
+
+
 
         mButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -45,31 +54,49 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void actionClick() {
-
-        // icon animation
-        // Animation de l'icone synchro
-        float deg = mButton.getRotation() + 360F;
-        mButton.animate().rotation(deg).setDuration(1000).setInterpolator(new AccelerateDecelerateInterpolator());
         // random statement selection
-        if (mStatementsStock.size()==0)
-            return;
+        if (mStatementsStock.size()==0) {
+            loadStatements();
+            if (mStatementsStock.size()==0) return;
+        }
         Random r = new Random();
         int i = r.nextInt(mStatementsStock.size());
         Statement s = mStatementsStock.get(i);
 
+        mText = s.getText();
+        mTextView.setText("");
+
+        // icon animation
+        // Animation de l'icone synchro
+        float deg = mButton.getRotation() + 360F;
+        mButton.animate().rotation(deg).setDuration(1000).setInterpolator(new LinearInterpolator())
+                .setListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        mTextView.setText(mText);
+                    };
+                });;
+
         // display and remove from stock
-        mTextView.setText(s.getText());
+        //mTextView.setText(s.getText());
         mStatementsStock.remove(i);
         mTextStock.setText(""+mStatementsStock.size());
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString("currentText", mText);
+        outState.putParcelableArrayList("currentList", mStatementsStock);
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
         if (App.scope == App.SCOPE_FAVORITES){
-            menu.findItem(R.id.action_favori).setIcon(R.drawable.ic_action_favorite_empty);
+            menu.findItem(R.id.action_favori).setIcon(R.drawable.ic_action_favorite_empty_white);
         } else {
-            menu.findItem(R.id.action_favori).setIcon(R.drawable.ic_action_favorite_full);
+            menu.findItem(R.id.action_favori).setIcon(R.drawable.ic_action_favorite_full_white);
         }
         mMenu = menu;
         return true;
@@ -93,9 +120,9 @@ public class MainActivity extends AppCompatActivity {
             case R.id.action_favori:
                 App.toggleScope();
                 if (App.scope == App.SCOPE_FAVORITES){
-                    mMenu.findItem(R.id.action_favori).setIcon(R.drawable.ic_action_favorite_empty);
+                    mMenu.findItem(R.id.action_favori).setIcon(R.drawable.ic_action_favorite_empty_white);
                 } else {
-                    mMenu.findItem(R.id.action_favori).setIcon(R.drawable.ic_action_favorite_full);
+                    mMenu.findItem(R.id.action_favori).setIcon(R.drawable.ic_action_favorite_full_white);
                 }
                 loadStatements();
                 return true;
@@ -118,10 +145,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void loadStatements() {
-        mStatementsStock = App.mBaseLocale.getStatementVector();
+        mStatementsStock = App.mBaseLocale.getStatementList();
         mTextView.setText("");
         if (mStatementsStock != null){
-            mTextStock.setText(""+mStatementsStock.size());
+            mTextStock.setText(String.valueOf(mStatementsStock.size()));
         }
     }
 }

@@ -1,4 +1,4 @@
-package com.pantagruel.unbrindled1;
+package com.pantagruel.megaoutrage.data;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -7,13 +7,17 @@ import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
-import java.util.Vector;
+import com.pantagruel.megaoutrage.App;
+
+import java.util.ArrayList;
 
 /**
  * Created by MAKI LAINEUX on 21/01/2018.
  */
 
 public class BddLocale {
+
+    private final String TAG = this.getClass().getSimpleName();
 
     private SQLiteDatabase mBdd;
     private BddOpenHelper mOpenHelper;
@@ -58,9 +62,9 @@ public class BddLocale {
     }
 
     // Get a vector with all statements matching given status and profile
-    public Vector<Statement> getStatementVector(){
+    public ArrayList<Statement> getStatementList(){
         Statement s;
-        Vector<Statement> v = new Vector<Statement>();
+        ArrayList<Statement> v = new ArrayList<>();
 
         // First get a Cursor with records matching the status
         String where = null;

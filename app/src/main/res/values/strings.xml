@@ -11,7 +11,6 @@
     <string name="button_delete">Del</string>
     <string name="empty_not_saved">Word not saved because it is empty.</string>
     <string name="defaultText">Default text</string>
-    <string name="defaultProfile">000000000</string>
     <string name="statement">Statement</string>
     <string name="nature">Cible</string>
     <string name="nature1">Homme</string>
@@ -33,7 +32,6 @@
     <string name="toast_short_click">Click court sur :</string>
     <string name="toast_long_click">Click long sur :</string>
     <string name="retour_edit">Retour EDIT</string>
-    <string name="impossible_return">Error 695</string>
     <string name="ko_return">Retour KO</string>
     <string name="retour_add">retour ADD</string>
     <string name="noText">NO TEXT</string>

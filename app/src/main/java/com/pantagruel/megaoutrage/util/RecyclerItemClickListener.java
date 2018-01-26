@@ -1,4 +1,4 @@
-package com.pantagruel.unbrindled1;
+package com.pantagruel.megaoutrage.util;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;

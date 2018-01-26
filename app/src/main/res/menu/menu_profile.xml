@@ -6,6 +6,6 @@
         android:id="@+id/action_okprofile"
         android:orderInCategory="100"
         android:title="@string/okprofile"
-        android:icon="@drawable/ic_action_valid"
+        android:icon="@drawable/ic_action_valid_white"
         app:showAsAction="always" />
 </menu>

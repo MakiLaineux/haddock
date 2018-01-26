@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.pantagruel.unbrindled1;
+package com.pantagruel.megaoutrage.adapters;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -22,14 +22,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import java.util.Vector;
+import com.pantagruel.megaoutrage.App;
+import com.pantagruel.megaoutrage.R;
+import com.pantagruel.megaoutrage.data.Statement;
+
+import java.util.ArrayList;
 
 public class StatementAdapter extends RecyclerView.Adapter<StatementAdapter.StatementViewHolder> {
 
-
-    private static final String TAG = StatementAdapter.class.getSimpleName();
+    private final String TAG = this.getClass().getSimpleName();
     private final LayoutInflater mInflater;
-    private Vector<Statement> mStatementVector;
+    private ArrayList<Statement> mStatementList;
 
 
     /**
@@ -47,18 +50,18 @@ public class StatementAdapter extends RecyclerView.Adapter<StatementAdapter.Stat
         }
     }
 
-    StatementAdapter() {
+    public StatementAdapter() {
         loadData();
         mInflater = LayoutInflater.from(App.context);
     }
 
     public void loadData() {
-        mStatementVector = App.mBaseLocale.getStatementVector();
+        mStatementList = App.mBaseLocale.getStatementList();
     }
 
     @Override
     public StatementViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View itemView = mInflater.inflate(R.layout.card, parent, false);
+        View itemView = mInflater.inflate(R.layout.layout_item_statement, parent, false);
         return new StatementViewHolder(itemView);
     }
 
@@ -66,21 +69,21 @@ public class StatementAdapter extends RecyclerView.Adapter<StatementAdapter.Stat
     public void onBindViewHolder(StatementViewHolder holder, int position) {
 
         // fill from the vector
-        holder.vhStatementText.setText(mStatementVector.elementAt(position).getText());
-        holder.vhStatementProfile.setText(mStatementVector.elementAt(position).getTextProfile());
+        holder.vhStatementText.setText(mStatementList.get(position).getText());
+        holder.vhStatementProfile.setText(mStatementList.get(position).getTextProfile());
 
         // Color of the mark bar
-        if (mStatementVector.elementAt(position).getStatus() == App.STATUS_MARKED)
+        if (mStatementList.get(position).getStatus() == App.STATUS_MARKED)
             holder.vhStatementBarreFavori.setBackgroundResource(R.color.colorMarked);
         else
             holder.vhStatementBarreFavori.setBackgroundResource(R.color.colorCard);
     }
 
     public Statement getStatementFromPosition (int pos){
-        if (mStatementVector == null)
+        if (mStatementList == null)
             return null;
         else
-            return mStatementVector.elementAt(pos);
+            return mStatementList.get(pos);
     }
 
     public boolean toggleFavori (Statement statement){
@@ -90,7 +93,7 @@ public class StatementAdapter extends RecyclerView.Adapter<StatementAdapter.Stat
 
     @Override
     public int getItemCount() {
-        return (mStatementVector == null) ? 0 : mStatementVector.size();
+        return (mStatementList == null) ? 0 : mStatementList.size();
     }
 
     public void insertStatement(Statement statement) {

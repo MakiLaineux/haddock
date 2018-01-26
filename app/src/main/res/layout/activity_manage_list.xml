@@ -10,7 +10,7 @@
         android:id="@+id/recyclerview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".ManageListActivity"
+        tools:context=".activities.ManageListActivity"
         tools:itemCount="3"
         >
     </android.support.v7.widget.RecyclerView>

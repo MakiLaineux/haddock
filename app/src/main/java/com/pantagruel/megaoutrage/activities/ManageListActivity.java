@@ -1,4 +1,4 @@
-package com.pantagruel.unbrindled1;
+package com.pantagruel.megaoutrage.activities;
 
 import android.content.Context;
 import android.content.Intent;
@@ -12,6 +12,12 @@ import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+
+import com.pantagruel.megaoutrage.App;
+import com.pantagruel.megaoutrage.R;
+import com.pantagruel.megaoutrage.util.RecyclerItemClickListener;
+import com.pantagruel.megaoutrage.data.Statement;
+import com.pantagruel.megaoutrage.adapters.StatementAdapter;
 
 public class ManageListActivity extends AppCompatActivity {
 
@@ -159,9 +165,9 @@ public class ManageListActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_manage_list, menu);
         if (App.scope == App.SCOPE_FAVORITES){
-            menu.findItem(R.id.action_favori).setIcon(R.drawable.ic_action_favorite_empty);
+            menu.findItem(R.id.action_favori).setIcon(R.drawable.ic_action_favorite_empty_white);
         } else {
-            menu.findItem(R.id.action_favori).setIcon(R.drawable.ic_action_favorite_full);
+            menu.findItem(R.id.action_favori).setIcon(R.drawable.ic_action_favorite_full_white);
         }
         mMenu = menu;
         return true;
@@ -180,9 +186,9 @@ public class ManageListActivity extends AppCompatActivity {
             case R.id.action_favori:
                 App.toggleScope();
                 if (App.scope == App.SCOPE_FAVORITES){
-                    mMenu.findItem(R.id.action_favori).setIcon(R.drawable.ic_action_favorite_empty);
+                    mMenu.findItem(R.id.action_favori).setIcon(R.drawable.ic_action_favorite_empty_white);
                 } else {
-                    mMenu.findItem(R.id.action_favori).setIcon(R.drawable.ic_action_favorite_full);
+                    mMenu.findItem(R.id.action_favori).setIcon(R.drawable.ic_action_favorite_full_white);
                 }
                 mAdapter.loadData();
                 mAdapter.notifyDataSetChanged();

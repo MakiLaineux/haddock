@@ -1,4 +1,4 @@
-package com.pantagruel.unbrindled1;
+package com.pantagruel.megaoutrage.activities;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -9,10 +9,15 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.CheckBox;
 
+import com.pantagruel.megaoutrage.App;
+import com.pantagruel.megaoutrage.data.Profile;
+import com.pantagruel.megaoutrage.R;
+
 public class ProfileActivity extends AppCompatActivity {
 
     private int mCallingActivity;
     public CheckBox[] mProfileCheckBox = new CheckBox[Profile.NB_CHECKBOX];
+    private final String TAG = this.getClass().getSimpleName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

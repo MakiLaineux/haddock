@@ -1,6 +1,9 @@
-package com.pantagruel.unbrindled1;
+package com.pantagruel.megaoutrage;
 
 import android.app.Application;
+
+import com.pantagruel.megaoutrage.data.BddLocale;
+import com.pantagruel.megaoutrage.data.Profile;
 
 /**
  * Created by MAKI LAINEUX on 18/03/2016.

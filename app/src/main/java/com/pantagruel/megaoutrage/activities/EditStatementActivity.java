@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.pantagruel.unbrindled1;
+package com.pantagruel.megaoutrage.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -23,14 +23,17 @@ import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
 
+import com.pantagruel.megaoutrage.App;
+import com.pantagruel.megaoutrage.data.Profile;
+import com.pantagruel.megaoutrage.R;
+import com.pantagruel.megaoutrage.data.Statement;
 
 
 /**
  * Activity to edit an existing or create a new word.
  */
 public class EditStatementActivity extends AppCompatActivity {
-
-    private static final String TAG = EditStatementActivity.class.getSimpleName();
+    private final String TAG = this.getClass().getSimpleName();
     private static final int NO_ID = -99;
     private static final String NO_WORD = "";
 
