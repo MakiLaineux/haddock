@@ -23,6 +23,6 @@
         android:layout_margin="16dp"
         android:clickable="true"
         android:focusable="true"
-        android:src="@drawable/ic_add_24dp" />
+        android:src="@drawable/ic_fab_24" />
 
 </android.support.design.widget.CoordinatorLayout>

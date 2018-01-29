@@ -16,6 +16,7 @@
 
 package com.pantagruel.megaoutrage.adapters;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,35 +34,17 @@ public class StatementAdapter extends RecyclerView.Adapter<StatementAdapter.Stat
     private final String TAG = this.getClass().getSimpleName();
     private final LayoutInflater mInflater;
     private ArrayList<Statement> mStatementList;
+    private Context mContext;
 
-
-    /**
-     *  Custom view holder with a text view and two buttons.
-     */
-    class StatementViewHolder extends RecyclerView.ViewHolder {
-        final TextView vhStatementText;
-        final TextView vhStatementProfile;
-        final View vhStatementBarreFavori;
-        StatementViewHolder(View itemView) {
-            super(itemView);
-            vhStatementText = itemView.findViewById(R.id.text);
-            vhStatementProfile = itemView.findViewById(R.id.profile);
-            vhStatementBarreFavori = itemView.findViewById(R.id.barrefavori);
-        }
-    }
-
-    public StatementAdapter() {
+    public StatementAdapter(Context context) {
+        mContext = context;
         loadData();
-        mInflater = LayoutInflater.from(App.context);
-    }
-
-    public void loadData() {
-        mStatementList = App.mBaseLocale.getStatementList();
+        mInflater = LayoutInflater.from(mContext);
     }
 
     @Override
     public StatementViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View itemView = mInflater.inflate(R.layout.layout_item_statement, parent, false);
+        View itemView = mInflater.inflate(R.layout.item_statement, parent, false);
         return new StatementViewHolder(itemView);
     }
 
@@ -70,13 +53,21 @@ public class StatementAdapter extends RecyclerView.Adapter<StatementAdapter.Stat
 
         // fill from the vector
         holder.vhStatementText.setText(mStatementList.get(position).getText());
-        holder.vhStatementProfile.setText(mStatementList.get(position).getTextProfile());
 
         // Color of the mark bar
         if (mStatementList.get(position).getStatus() == App.STATUS_MARKED)
-            holder.vhStatementBarreFavori.setBackgroundResource(R.color.colorMarked);
+            holder.vhStatementBarreFavori.setBackgroundResource(R.color.color_marked);
         else
-            holder.vhStatementBarreFavori.setBackgroundResource(R.color.colorCard);
+            holder.vhStatementBarreFavori.setBackgroundResource(R.color.color_fond);
+    }
+
+    @Override
+    public int getItemCount() {
+        return (mStatementList == null) ? 0 : mStatementList.size();
+    }
+
+    public void loadData() {
+        mStatementList = App.sBaseLocale.getStatementList();
     }
 
     public Statement getStatementFromPosition (int pos){
@@ -87,29 +78,36 @@ public class StatementAdapter extends RecyclerView.Adapter<StatementAdapter.Stat
     }
 
     public boolean toggleFavori (Statement statement){
-        if (App.mBaseLocale.toggleStatutFavori(statement) == 1) return true;
+        if (App.sBaseLocale.toggleStatutFavori(statement) == 1) return true;
         else return false;
     }
 
-    @Override
-    public int getItemCount() {
-        return (mStatementList == null) ? 0 : mStatementList.size();
-    }
-
     public void insertStatement(Statement statement) {
-        App.mBaseLocale.insertOneStatement(statement);
+        App.sBaseLocale.insertOneStatement(statement);
         notifyDataSetChanged();
     }
 
     public void updateStatement(Statement statement) {
-        App.mBaseLocale.updateOneStatement(statement);
+        App.sBaseLocale.updateOneStatement(statement);
         notifyDataSetChanged();
     }
 
     public void removeStatement(Statement statement) {
-        App.mBaseLocale.removeOneStatement(statement);
+        App.sBaseLocale.removeOneStatement(statement);
         notifyDataSetChanged();
     }
+
+    /**
+     *  Custom view holder with a text view and two buttons.
+     */
+    class StatementViewHolder extends RecyclerView.ViewHolder {
+        final TextView vhStatementText;
+        final View vhStatementBarreFavori;
+        StatementViewHolder(View itemView) {
+            super(itemView);
+            vhStatementText = itemView.findViewById(R.id.text);
+            vhStatementBarreFavori = itemView.findViewById(R.id.barrefavori);
+        }
+    }
+
 }
-
-

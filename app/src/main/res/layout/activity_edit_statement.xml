@@ -8,26 +8,17 @@
 
     <EditText
         android:id="@+id/edit_text"
-        style="@style/statement_item_style"
+        style="@style/statement_style.big"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/hint_word"
         />
 
     <include
-        layout="@layout/layout_criterias"
+        layout="@layout/partial_criterias"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        />
-
-    <Button
-        android:id="@+id/button_save"
-        style="@style/button_style"
-        android:onClick="returnReply"
-        android:layout_width="@dimen/button_width"
-        android:layout_height="@dimen/button_height"
-        android:text="@string/button_save"
         />
 
 </LinearLayout>

@@ -7,50 +7,25 @@ import com.pantagruel.megaoutrage.App;
 
 public class Statement implements Parcelable{
 	private static String TAG = Statement.class.getSimpleName();
-	private int id;
-	private String text;
-	private Profile profile;
-	private int status;
-
-	public Statement() {
-		this.id = App.NOID;
-		this.text = App.NOTEXT;
-		this.status = App.STATUS_NONE;
-		this.profile = new Profile();
-	}
+	private int mId;
+	private String mText;
+	private Profile mProfile;
+	private int mStatus;
 
 	public Statement(int id, String text, String profile, int status) {
-		this.id = id;
-		this.text = text;
-		this.profile = new Profile();
+		this.mId = id;
+		this.mText = text;
+		this.mProfile = new Profile();
 		this.setProfileFromString(profile);
-		this.status = status;
+		this.mStatus = status;
 	}
 
 	private Statement(Parcel in) {
-		this.id = in.readInt();
-		this.text = in.readString();
-		this.profile = new Profile();
+		this.mId = in.readInt();
+		this.mText = in.readString();
+		this.mProfile = new Profile();
 		this.setProfileFromString(in.readString());
-		this.status = in.readInt();
-	}
-
-	public int getId() {return id;}
-	public String getText() {
-		return text;
-	}
-	public String getTextProfile() {return profile.toString();}
-	public Profile getProfile() {return profile;}
-	public int getStatus() {
-		return status;
-	}
-
-	public void setId(int i) {id = i;}
-	public void setText(String t) {text = t;}
-	public void setProfileFromString(String s) {profile.feedFromString(s);}
-	public void setStatus(int s) {status=s;}
-	public boolean matchesProfile(Profile p) {
-		return p.matches(this.profile);
+		this.mStatus = in.readInt();
 	}
 
 	@Override
@@ -60,11 +35,12 @@ public class Statement implements Parcelable{
 
 	@Override
 	public void writeToParcel(Parcel dest, int flags) {
-		dest.writeInt(id);
-		dest.writeString(text);
-		dest.writeString(profile.toString());
-		dest.writeInt(status);
+		dest.writeInt(mId);
+		dest.writeString(mText);
+		dest.writeString(mProfile.toString());
+		dest.writeInt(mStatus);
 	}
+
 	public static final Parcelable.Creator<Statement> CREATOR = new Parcelable.Creator<Statement>() {
 		public Statement createFromParcel(Parcel in) {
 			return new Statement(in);
@@ -74,4 +50,35 @@ public class Statement implements Parcelable{
 			return new Statement[size];
 		}
 	};
+
+	public int getId() {return mId;}
+
+	public String getText() {
+		return mText;
+	}
+
+	public String getTextProfile() {return mProfile.toString();}
+
+	public Profile getProfile() {return mProfile;}
+
+	public int getStatus() {
+		return mStatus;
+	}
+
+	public void setId(int i) {
+		mId = i;}
+
+	public void setText(String t) {
+		mText = t;}
+
+	public void setProfileFromString(String s) {
+		mProfile.feedFromString(s);}
+
+	public void setStatus(int s) {
+		mStatus =s;}
+
+	public boolean matchesProfile(Profile p) {
+		return p.matches(this.mProfile);
+	}
+
 }

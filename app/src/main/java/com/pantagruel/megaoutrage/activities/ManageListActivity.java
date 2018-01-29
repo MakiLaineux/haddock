@@ -1,6 +1,5 @@
 package com.pantagruel.megaoutrage.activities;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -21,6 +20,9 @@ import com.pantagruel.megaoutrage.adapters.StatementAdapter;
 
 public class ManageListActivity extends AppCompatActivity {
 
+    public static final int REQUEST_ADD = 1;
+    public static final int REQUEST_EDIT = 2;
+    public static final int REQUEST_PROFILE = 3;
     private static final String TAG = ManageListActivity.class.getSimpleName();
 
     private RecyclerView mRecyclerView;
@@ -40,7 +42,7 @@ public class ManageListActivity extends AppCompatActivity {
         mRecyclerView.setLayoutManager(mLayoutManager);
 
         // Create an mAdapter and supply the data to be displayed.
-        mAdapter = new StatementAdapter();
+        mAdapter = new StatementAdapter(this);
         // Connect the mAdapter with the recycler view.
         mRecyclerView.setAdapter(mAdapter);
 
@@ -84,38 +86,75 @@ public class ManageListActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 // Start empty edit activity.
-                Context context = App.context;
-                Intent intent = new Intent(context, EditStatementActivity.class);
-                intent.putExtra(App.EXTRA_REQUEST, App.REQUEST_ADD);
-                startActivityForResult(intent, App.REQUEST_ADD);
+                Intent intent = new Intent(ManageListActivity.this, EditStatementActivity.class);
+                intent.putExtra(EditStatementActivity.EXTRA_REQUEST, EditStatementActivity.REQUEST_ADD);
+                startActivityForResult(intent, EditStatementActivity.REQUEST_ADD);
             }
         });
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_manage_list, menu);
+        if (App.sScope == App.SCOPE_FAVORITES){
+            menu.findItem(R.id.action_favori).setIcon(R.drawable.ic_action_favorite_empty_white);
+        } else {
+            menu.findItem(R.id.action_favori).setIcon(R.drawable.ic_action_favorite_full_white);
+        }
+        mMenu = menu;
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        Intent intent;
+        // Handle item selection
+        switch (item.getItemId()) {
+            case R.id.action_profile:
+                intent = new Intent(this, ProfileActivity.class);
+                startActivityForResult(intent, REQUEST_PROFILE);
+                return true;
+            case R.id.action_favori:
+                App.toggleScope();
+                if (App.sScope == App.SCOPE_FAVORITES){
+                    mMenu.findItem(R.id.action_favori).setIcon(R.drawable.ic_action_favorite_empty_white);
+                } else {
+                    mMenu.findItem(R.id.action_favori).setIcon(R.drawable.ic_action_favorite_full_white);
+                }
+                mAdapter.loadData();
+                mAdapter.notifyDataSetChanged();
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         Statement statement;
 
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode != RESULT_OK) return;
         switch (requestCode){
-            case App.REQUEST_PROFILE:
+            case REQUEST_PROFILE:
                 break;
-            case App.REQUEST_ADD:
+            case REQUEST_ADD:
                 statement = new Statement(
-                        data.getIntExtra(App.EXTRA_ID, App.NOID),
-                        data.getStringExtra(App.EXTRA_TEXT),
-                        data.getStringExtra(App.EXTRA_PROFILE),
-                        data.getIntExtra(App.EXTRA_STATUS, App.STATUS_NONE)
+                        data.getIntExtra(EditStatementActivity.EXTRA_ID, App.NOID),
+                        data.getStringExtra(EditStatementActivity.EXTRA_TEXT),
+                        data.getStringExtra(EditStatementActivity.EXTRA_PROFILE),
+                        data.getIntExtra(EditStatementActivity.EXTRA_STATUS, App.STATUS_NORMAL)
                 );
                 if (TextUtils.isEmpty(statement.getText())) {return;}
                 mAdapter.insertStatement(statement);
                 break;
-            case App.REQUEST_EDIT:
+            case REQUEST_EDIT:
                 statement = new Statement(
-                        data.getIntExtra(App.EXTRA_ID, App.NOID),
-                        data.getStringExtra(App.EXTRA_TEXT),
-                        data.getStringExtra(App.EXTRA_PROFILE),
-                        data.getIntExtra(App.EXTRA_STATUS, App.STATUS_NONE)
+                        data.getIntExtra(EditStatementActivity.EXTRA_ID, 0),
+                        data.getStringExtra(EditStatementActivity.EXTRA_TEXT),
+                        data.getStringExtra(EditStatementActivity.EXTRA_PROFILE),
+                        data.getIntExtra(EditStatementActivity.EXTRA_STATUS, 0)
                 );
                 if (TextUtils.isEmpty(statement.getText())) {return;}
                 mAdapter.updateStatement(statement);
@@ -129,19 +168,18 @@ public class ManageListActivity extends AppCompatActivity {
 
     // RecyclerView events : short click : Edit item
     public void shortClick(View v, int pos) {
-        Context context = App.context;
-        Intent intent = new Intent(context, EditStatementActivity.class);
+        Intent intent = new Intent(ManageListActivity.this, EditStatementActivity.class);
 
         Statement s = mAdapter.getStatementFromPosition(pos);
 
-        intent.putExtra(App.EXTRA_ID, s.getId());
-        intent.putExtra(App.EXTRA_TEXT, s.getText());
-        intent.putExtra(App.EXTRA_PROFILE, s.getTextProfile());
-        intent.putExtra(App.EXTRA_STATUS, s.getStatus());
-        intent.putExtra(App.EXTRA_REQUEST, App.REQUEST_EDIT);
+        intent.putExtra(EditStatementActivity.EXTRA_ID, s.getId());
+        intent.putExtra(EditStatementActivity.EXTRA_TEXT, s.getText());
+        intent.putExtra(EditStatementActivity.EXTRA_PROFILE, s.getTextProfile());
+        intent.putExtra(EditStatementActivity.EXTRA_STATUS, s.getStatus());
+        intent.putExtra(EditStatementActivity.EXTRA_REQUEST, EditStatementActivity.REQUEST_EDIT);
 
         // Start an empty edit activity.
-        startActivityForResult(intent, App.REQUEST_EDIT);
+        startActivityForResult(intent, EditStatementActivity.REQUEST_EDIT);
     }
 
     // RecyclerView events : long click : Toggle mark
@@ -161,41 +199,4 @@ public class ManageListActivity extends AppCompatActivity {
         mAdapter.notifyDataSetChanged();
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_manage_list, menu);
-        if (App.scope == App.SCOPE_FAVORITES){
-            menu.findItem(R.id.action_favori).setIcon(R.drawable.ic_action_favorite_empty_white);
-        } else {
-            menu.findItem(R.id.action_favori).setIcon(R.drawable.ic_action_favorite_full_white);
-        }
-        mMenu = menu;
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        Intent intent;
-        // Handle item selection
-        switch (item.getItemId()) {
-            case R.id.action_profile:
-                intent = new Intent(this, ProfileActivity.class);
-                intent.putExtra(App.EXTRA_ACTIVITY, App.FROM_LIST_ACTIVITY);
-                startActivityForResult(intent, App.REQUEST_PROFILE);
-                return true;
-            case R.id.action_favori:
-                App.toggleScope();
-                if (App.scope == App.SCOPE_FAVORITES){
-                    mMenu.findItem(R.id.action_favori).setIcon(R.drawable.ic_action_favorite_empty_white);
-                } else {
-                    mMenu.findItem(R.id.action_favori).setIcon(R.drawable.ic_action_favorite_full_white);
-                }
-                mAdapter.loadData();
-                mAdapter.notifyDataSetChanged();
-                return true;
-
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
 }

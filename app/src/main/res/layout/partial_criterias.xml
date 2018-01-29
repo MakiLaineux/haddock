@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     tools:context=".activities.EditStatementActivity"
-    tools:showIn="@layout/activity_edit_word">
+    tools:showIn="@layout/activity_edit_statement">
 
 <LinearLayout
     android:layout_width="match_parent"

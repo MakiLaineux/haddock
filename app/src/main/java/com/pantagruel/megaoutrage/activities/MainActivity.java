@@ -20,12 +20,14 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
+    private final int REQUEST_LIST = 1;
+    private final int REQUEST_PROFILE = 2;
     private final String TAG = this.getClass().getSimpleName();
     private ArrayList<Statement> mStatementsStock;
     private ImageButton mButton;
     private TextView mTextView, mTextStock;
     private Menu mMenu;
-    String mText;
+    private String mText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,15 +45,73 @@ public class MainActivity extends AppCompatActivity {
         } else {
             loadStatements();
         }
-
-
-
         mButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 actionClick();
             }
         });
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        if (App.sScope == App.SCOPE_FAVORITES){
+            menu.findItem(R.id.action_favori).setIcon(R.drawable.ic_action_favorite_empty_white);
+        } else {
+            menu.findItem(R.id.action_favori).setIcon(R.drawable.ic_action_favorite_full_white);
+        }
+        mMenu = menu;
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        Intent intent;
+        // Handle item selection
+        switch (item.getItemId()) {
+            case R.id.action_list:
+                intent = new Intent(this, ManageListActivity.class);
+                startActivityForResult(intent, REQUEST_LIST);
+                return true;
+            case R.id.action_profile:
+                intent = new Intent(this, ProfileActivity.class);
+                startActivityForResult(intent, REQUEST_PROFILE);
+                return true;
+            case R.id.action_favori:
+                App.toggleScope();
+                if (App.sScope == App.SCOPE_FAVORITES){
+                    mMenu.findItem(R.id.action_favori).setIcon(R.drawable.ic_action_favorite_empty_white);
+                } else {
+                    mMenu.findItem(R.id.action_favori).setIcon(R.drawable.ic_action_favorite_full_white);
+                }
+                loadStatements();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode){
+            case REQUEST_PROFILE:
+            case REQUEST_LIST:
+                loadStatements();
+                mTextView.setText("");
+                break;
+            default:
+                break;
+        }
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString("currentText", mText);
+        outState.putParcelableArrayList("currentList", mStatementsStock);
+    }
+
 
     private void actionClick() {
         // random statement selection
@@ -80,72 +140,11 @@ public class MainActivity extends AppCompatActivity {
         // display and remove from stock
         //mTextView.setText(s.getText());
         mStatementsStock.remove(i);
-        mTextStock.setText(""+mStatementsStock.size());
-    }
-
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putString("currentText", mText);
-        outState.putParcelableArrayList("currentList", mStatementsStock);
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        if (App.scope == App.SCOPE_FAVORITES){
-            menu.findItem(R.id.action_favori).setIcon(R.drawable.ic_action_favorite_empty_white);
-        } else {
-            menu.findItem(R.id.action_favori).setIcon(R.drawable.ic_action_favorite_full_white);
-        }
-        mMenu = menu;
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        Intent intent;
-        // Handle item selection
-        switch (item.getItemId()) {
-            case R.id.action_list:
-                intent = new Intent(this, ManageListActivity.class);
-                //intent.putExtra(EXTRA_MESSAGE, message);
-                startActivityForResult(intent, App.REQUEST_LIST);
-                return true;
-            case R.id.action_profile:
-                intent = new Intent(this, ProfileActivity.class);
-                intent.putExtra(App.EXTRA_ACTIVITY, App.FROM_MAIN_ACTIVITY);
-                startActivityForResult(intent, App.REQUEST_PROFILE);
-                return true;
-            case R.id.action_favori:
-                App.toggleScope();
-                if (App.scope == App.SCOPE_FAVORITES){
-                    mMenu.findItem(R.id.action_favori).setIcon(R.drawable.ic_action_favorite_empty_white);
-                } else {
-                    mMenu.findItem(R.id.action_favori).setIcon(R.drawable.ic_action_favorite_full_white);
-                }
-                loadStatements();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        switch (requestCode){
-            case App.REQUEST_PROFILE:
-            case App.REQUEST_LIST:
-                loadStatements();
-                mTextView.setText("");
-                break;
-            default:
-                break;
-        }
+        mTextStock.setText(String.valueOf(mStatementsStock.size()));
     }
 
     private void loadStatements() {
-        mStatementsStock = App.mBaseLocale.getStatementList();
+        mStatementsStock = App.sBaseLocale.getStatementList();
         mTextView.setText("");
         if (mStatementsStock != null){
             mTextStock.setText(String.valueOf(mStatementsStock.size()));

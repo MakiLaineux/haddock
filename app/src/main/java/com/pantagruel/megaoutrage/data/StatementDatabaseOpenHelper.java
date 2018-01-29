@@ -16,24 +16,24 @@ import java.io.InputStreamReader;
  * Created by MAKI LAINEUX on 16/01/2018.
  */
 
-public class BddOpenHelper extends SQLiteOpenHelper {
+public class StatementDatabaseOpenHelper extends SQLiteOpenHelper {
 
     private final String TAG = this.getClass().getSimpleName();
 
     // string array of columns.
-    private static final String[] COLUMNS = { App.STATEMENT_COL_ID, App.STATEMENT_COL_TEXT, App.STATEMENT_COL_PROFILE };
+    private static final String[] COLUMNS = { StatementDatabase.STATEMENT_COL_ID, StatementDatabase.STATEMENT_COL_TEXT, StatementDatabase.STATEMENT_COL_PROFILE };
     private Context mContext;
 
     // Build the SQL query that creates the table.
     private static final String STATEMENT_LIST_TABLE_CREATE =
-            "CREATE TABLE " + App.TABLE_STATEMENT + " (" +
-                    App.STATEMENT_COL_ID + " INTEGER PRIMARY KEY, " +
-                    App.STATEMENT_COL_TEXT + " TEXT, " +
-                    App.STATEMENT_COL_PROFILE + " TEXT, " +
-                    App.STATEMENT_COL_STATUS + " INTEGER );";
+            "CREATE TABLE " + StatementDatabase.TABLE_STATEMENT + " (" +
+                    StatementDatabase.STATEMENT_COL_ID + " INTEGER PRIMARY KEY, " +
+                    StatementDatabase.STATEMENT_COL_TEXT + " TEXT, " +
+                    StatementDatabase.STATEMENT_COL_PROFILE + " TEXT, " +
+                    StatementDatabase.STATEMENT_COL_STATUS + " INTEGER );";
 
-    public BddOpenHelper(Context context) {
-        super(context, App.DATABASE_NAME, null, App.DATABASE_VERSION);
+    public StatementDatabaseOpenHelper(Context context) {
+        super(context, StatementDatabase.DATABASE_NAME, null, StatementDatabase.DATABASE_VERSION);
         mContext = context;
 
     }
@@ -46,7 +46,7 @@ public class BddOpenHelper extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         Log.d(TAG, "BDD Upgrade");
-        db.execSQL("DROP TABLE IF EXISTS " + App.TABLE_STATEMENT);
+        db.execSQL("DROP TABLE IF EXISTS " + StatementDatabase.TABLE_STATEMENT);
         onCreate(db);
     }
 
@@ -63,10 +63,10 @@ public class BddOpenHelper extends SQLiteOpenHelper {
                 String strProfile = ligne.substring(0,13);
                 String strText = ligne.substring(13);
                 Statement statement = new Statement(App.NOID, strText, strProfile, App.STATUS_NORMAL);
-                values.put(App.STATEMENT_COL_TEXT, statement.getText());
-                values.put(App.STATEMENT_COL_PROFILE, statement.getTextProfile());
-                values.put(App.STATEMENT_COL_STATUS, App.STATUS_NORMAL);
-                db.insert(App.TABLE_STATEMENT, null, values);
+                values.put(StatementDatabase.STATEMENT_COL_TEXT, statement.getText());
+                values.put(StatementDatabase.STATEMENT_COL_PROFILE, statement.getTextProfile());
+                values.put(StatementDatabase.STATEMENT_COL_STATUS, App.STATUS_NORMAL);
+                db.insert(StatementDatabase.TABLE_STATEMENT, null, values);
             }
             bOK=true;
             buf.close();

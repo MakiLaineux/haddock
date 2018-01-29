@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- French version  -->
+
+<resources>
+    <string name="app_name">Outrages</string>
+    <string name="hint_word">Entrez votre outrage ici</string>
+    <string name="lib_profile">Profil</string>
+
+    <!-- Menu actions  -->
+    <string name="action_list">Liste</string>
+    <string name="action_profile">Profilage</string>
+    <string name="action_valid_statement">OK</string>
+    <string name="action_valid_profile">OK</string>
+    <string name="action_favori">Favoris</string>
+
+</resources>

@@ -3,9 +3,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.pantagruel.myapplication.ManageListActivity">
     <item
-        android:id="@+id/action_valid_profile"
+        android:id="@+id/action_valid_statement"
         android:orderInCategory="100"
-        android:title="@string/action_valid_profile"
+        android:title="@string/action_valid_statement"
         android:icon="@drawable/ic_action_valid_white"
         app:showAsAction="always" />
 </menu>

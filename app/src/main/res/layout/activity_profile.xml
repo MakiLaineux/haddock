@@ -9,14 +9,14 @@ tools:context="com.pantagruel.megaoutrage.activities.ProfileActivity">
 
 <TextView
     android:id="@+id/lib_profile"
-    style="@style/statement_item_style"
+    style="@style/statement_style.normal"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:text="@string/lib_profile"
     />
 
 <include
-    layout="@layout/layout_criterias"
+    layout="@layout/partial_criterias"
     android:layout_width="match_parent"
     android:layout_height="0dp"
     android:layout_weight="1"

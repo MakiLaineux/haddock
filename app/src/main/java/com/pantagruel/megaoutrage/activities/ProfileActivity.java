@@ -16,7 +16,7 @@ import com.pantagruel.megaoutrage.R;
 public class ProfileActivity extends AppCompatActivity {
 
     private int mCallingActivity;
-    public CheckBox[] mProfileCheckBox = new CheckBox[Profile.NB_CHECKBOX];
+    private CheckBox[] mProfileCheckBox = new CheckBox[Profile.NB_CHECKBOX];
     private final String TAG = this.getClass().getSimpleName();
 
     @Override
@@ -24,21 +24,18 @@ public class ProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
-        // identity of the calling activity should be passed in extra.
-        mCallingActivity = getIntent().getExtras().getInt(App.EXTRA_ACTIVITY, App.FROM_MAIN_ACTIVITY);
-
         // Init checkboxes from boolean profile values stored in shared preferences
         int boxId;
         String boxName;
 
-        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(App.context);
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(ProfileActivity.this);
         for (int i = 0; i<Profile.NB_CHECKBOX ; i++) {
             // find checkbox
             boxName = Profile.CHECKBOXNAME + Integer.toString(i);
             boxId = getResources().getIdentifier(boxName, "id", getPackageName());
             mProfileCheckBox[i] = findViewById(boxId);
             // set with boolean profile value
-            String prefName = App.PROFILE_BOOL + Integer.toString(i);
+            String prefName = Profile.PROFILE_BOOL + Integer.toString(i);
             mProfileCheckBox[i].setChecked(sharedPref.getBoolean(prefName, true));
         }
     }
@@ -50,22 +47,6 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     @Override
-    public Intent getParentActivityIntent() {
-        // Retrieve identity of the calling activity
-        Intent i = null;
-        switch (mCallingActivity) {
-            case App.FROM_LIST_ACTIVITY:
-                i = new Intent(this, ManageListActivity.class);
-                break;
-            case App.FROM_MAIN_ACTIVITY:
-            default:
-                i = new Intent(this, MainActivity.class);
-                break;
-        }
-        i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-        return i;
-    }
-    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_profile, menu);
         return true;
@@ -75,15 +56,15 @@ public class ProfileActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         Intent intent;
         switch (item.getItemId()) {
-            case R.id.action_okprofile:
+            case R.id.action_valid_profile:
                 boolean[] boolArray = new boolean[Profile.NB_CHECKBOX];
 
                 //saving the profile booleans in shared preferences
-                SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(App.context);
+                SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(ProfileActivity.this);
                 SharedPreferences.Editor editor = sharedPref.edit();
 
                 for (int i = 0; i<Profile.NB_CHECKBOX ; i++) {
-                    String prefName = App.PROFILE_BOOL + Integer.toString(i);
+                    String prefName = Profile.PROFILE_BOOL + Integer.toString(i);
                     boolArray[i] = mProfileCheckBox[i].isChecked();
                     editor.putBoolean(prefName, boolArray[i]);
                 }

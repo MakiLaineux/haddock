@@ -17,8 +17,12 @@
 package com.pantagruel.megaoutrage.activities;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -33,21 +37,26 @@ import com.pantagruel.megaoutrage.data.Statement;
  * Activity to edit an existing or create a new word.
  */
 public class EditStatementActivity extends AppCompatActivity {
+
+    public static final String EXTRA_ID = "com.pantagruel.unbrindled.ID";
+    public static final String EXTRA_TEXT = "com.pantagruel.unbrindled.TEXT";
+    public static final String EXTRA_PROFILE = "com.pantagruel.unbrindled.PROFILE";
+    public static final String EXTRA_STATUS = "com.pantagruel.unbrindled.STATUS";
+    public static final String EXTRA_REQUEST = "com.pantagruel.unbrindled.REQUEST";
+    public static final int REQUEST_ADD = 1;
+    public static final int REQUEST_EDIT = 2;
+
     private final String TAG = this.getClass().getSimpleName();
-    private static final int NO_ID = -99;
-    private static final String NO_WORD = "";
-
     private EditText mEditTextView;
-    public CheckBox[] mProfileCheckBox = new CheckBox[Profile.NB_CHECKBOX];
-
-    int mStatementStatus = App.STATUS_NONE;
-    int mId = NO_ID;
-    int mRequestCode = App.REQUEST_NONE;
+    private CheckBox[] mProfileCheckBox = new CheckBox[Profile.NB_CHECKBOX];
+    private int mStatementStatus = App.STATUS_NORMAL;
+    private int mId = App.NOID;
+    private int mRequestCode;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_edit_word);
+        setContentView(R.layout.activity_edit_statement);
 
         mEditTextView = findViewById(R.id.edit_text);
         int boxId;
@@ -63,22 +72,22 @@ public class EditStatementActivity extends AppCompatActivity {
         if (extras == null){
             finish();
         } else {
-            mRequestCode = extras.getInt(App.EXTRA_REQUEST, App.REQUEST_NONE);
+            mRequestCode = extras.getInt(EXTRA_REQUEST, 0);
         }
 
         // Init display
         switch (mRequestCode){
-            case App.REQUEST_ADD:
+            case REQUEST_ADD:
                 mEditTextView.setText("");
                 for (int i=0; i<Profile.NB_CHECKBOX ; i++) mProfileCheckBox[i].setChecked(false);
                 break;
-            case App.REQUEST_EDIT:
-                mId = extras.getInt(App.EXTRA_ID, NO_ID);
+            case REQUEST_EDIT:
+                mId = extras.getInt(EXTRA_ID, App.NOID);
                 Statement statement = new Statement(
                         mId,
-                        extras.getString(App.EXTRA_TEXT, NO_WORD),
-                        extras.getString(App.EXTRA_PROFILE, NO_WORD),
-                        extras.getInt(App.EXTRA_STATUS, App.STATUS_NONE)
+                        extras.getString(EXTRA_TEXT),
+                        extras.getString(EXTRA_PROFILE),
+                        extras.getInt(EXTRA_STATUS, App.STATUS_NORMAL)
                 );
                 mStatementStatus = statement.getStatus(); // remember whether an edited statement is marked
                 mEditTextView.setText(statement.getText());
@@ -91,12 +100,30 @@ public class EditStatementActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_edit_statement, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        Intent intent;
+        switch (item.getItemId()) {
+            case R.id.action_valid_statement:
+                returnReply();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
     /**
      *  Click handler for the Save button.
      *  Creates a new intent for the reply, adds the reply message to it as an extra,
      *  sets the intent result, and closes the activity.
      */
-    public void returnReply(View view) {
+    public void returnReply() {
         int boxId;
         String boxName;
 
@@ -114,10 +141,10 @@ public class EditStatementActivity extends AppCompatActivity {
 
         // Reply
         Intent replyIntent = new Intent();
-        replyIntent.putExtra(App.EXTRA_ID, mId);
-        replyIntent.putExtra(App.EXTRA_TEXT, text);
-        replyIntent.putExtra(App.EXTRA_PROFILE, p.toString());
-        replyIntent.putExtra(App.EXTRA_STATUS, p.toString());
+        replyIntent.putExtra(EXTRA_ID, mId);
+        replyIntent.putExtra(EXTRA_TEXT, text);
+        replyIntent.putExtra(EXTRA_PROFILE, p.toString());
+        replyIntent.putExtra(EXTRA_STATUS, mStatementStatus);
         setResult(RESULT_OK, replyIntent);
         finish();
     }

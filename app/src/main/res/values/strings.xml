@@ -1,43 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<!--      -->
+<!-- International version (english)  -->
 
 <resources>
     <string name="app_name">Statements</string>
     <string name="hint_word">Enter your statement here</string>
-    <string name="button_save">Save</string>
-    <string name="button_new">New</string>
-    <string name="button_edit">Edit</string>
-    <string name="button_delete">Del</string>
-    <string name="empty_not_saved">Word not saved because it is empty.</string>
-    <string name="defaultText">Default text</string>
-    <string name="statement">Statement</string>
-    <string name="nature">Cible</string>
-    <string name="nature1">Homme</string>
-    <string name="nature2">Femme</string>
-    <string name="nature3">Enfant</string>
-    <string name="styles">Style</string>
-    <string name="styles1">Distingu\é</string>
-    <string name="styles2">Ordinaire</string>
-    <string name="styles3">Vulgaire</string>
-    <string name="criteria">Atteintes</string>
-    <string name="criteria1">Physique</string>
-    <string name="criteria2">Capacit\és</string>
-    <string name="criteria3">Vie sexuelle</string>
-    <string name="criteria4">Ethnique</string>
-    <string name="criteria5">Vices</string>
-    <string name="criteria6">Animalit\é</string>
-    <string name="criteria7">Divers</string>
-    <string name="texte_debug">texte debug</string>
-    <string name="toast_short_click">Click court sur :</string>
-    <string name="toast_long_click">Click long sur :</string>
-    <string name="retour_edit">Retour EDIT</string>
-    <string name="ko_return">Retour KO</string>
-    <string name="retour_add">retour ADD</string>
-    <string name="noText">NO TEXT</string>
+    <string name="lib_profile">Profile</string>
+
+    <!-- Menu actions  -->
     <string name="action_list">List</string>
     <string name="action_profile">Profile</string>
-    <string name="lib_profile">Cible</string>
-    <string name="okprofile">OK</string>
+    <string name="action_valid_statement">OK</string>
+    <string name="action_valid_profile">OK</string>
     <string name="action_favori">Favorites</string>
 </resources>
