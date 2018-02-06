@@ -3,9 +3,11 @@ package com.pantagruel.megaoutrage.data;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.provider.ContactsContract;
 import android.util.Log;
 
 import com.pantagruel.megaoutrage.App;
+import com.pantagruel.megaoutrage.activities.ManageListActivity;
 
 /**
  * Created by MAKI LAINEUX on 17/01/2018.
@@ -24,7 +26,7 @@ public class Profile {
     private static final int NB_CHECKBOX_STYLE = 3;
     private static final int NB_CHECKBOX_CRITERIA = 7;
 
-    private final String TAG = this.getClass().getSimpleName();
+    private static final String TAG = App.TAG + ContactsContract.Profile.class.getSimpleName();
 
     private boolean[] mFlag = new boolean[NB_CHECKBOX];
 
@@ -45,7 +47,7 @@ public class Profile {
         for (int i =0 ; i < NB_CHECKBOX ; i++)
             buffer.append(mFlag[i] ? 'X' : ' ');
 
-        Log.d(App.TAG, "toString : Text : Z" + buffer.toString() + "Z");
+        //Log.d(App.TAG, "toString : Text : Z" + buffer.toString() + "Z");
 
         return(buffer.toString());
     }
@@ -60,7 +62,7 @@ public class Profile {
             return;           
         }
         else
-            Log.d(App.TAG, "feedFromString : Profile : Z" + s + "Z");
+            //Log.d(App.TAG, "feedFromString : Profile : Z" + s + "Z");
         for (int i =0 ; i < NB_CHECKBOX ; i++)
             this.mFlag[i] = (s.charAt(i) == 'X');
     }

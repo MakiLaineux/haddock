@@ -20,9 +20,9 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
+    private static final String TAG = App.TAG + MainActivity.class.getSimpleName();
     private final int REQUEST_LIST = 1;
     private final int REQUEST_PROFILE = 2;
-    private final String TAG = this.getClass().getSimpleName();
     private ArrayList<Statement> mStatementsStock;
     private ImageButton mButton;
     private TextView mTextView, mTextStock;
@@ -144,7 +144,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void loadStatements() {
-        mStatementsStock = App.sBaseLocale.getStatementList();
+        mStatementsStock = App.sBaseLocale.getStatementList(App.sCurrentProfile, App.sScope);
         mTextView.setText("");
         if (mStatementsStock != null){
             mTextStock.setText(String.valueOf(mStatementsStock.size()));

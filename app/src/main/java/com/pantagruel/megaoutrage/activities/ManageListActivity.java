@@ -1,6 +1,12 @@
 package com.pantagruel.megaoutrage.activities;
 
+import android.app.Activity;
+import android.app.LoaderManager;
+import android.content.Context;
+import android.content.CursorLoader;
 import android.content.Intent;
+import android.content.Loader;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -8,22 +14,27 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.CursorAdapter;
 
 import com.pantagruel.megaoutrage.App;
 import com.pantagruel.megaoutrage.R;
+import com.pantagruel.megaoutrage.data.StatementArrayListLoader;
 import com.pantagruel.megaoutrage.util.RecyclerItemClickListener;
 import com.pantagruel.megaoutrage.data.Statement;
 import com.pantagruel.megaoutrage.adapters.StatementAdapter;
 
-public class ManageListActivity extends AppCompatActivity {
+import java.util.ArrayList;
+
+public class ManageListActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<ArrayList<Statement>> {
 
     public static final int REQUEST_ADD = 1;
     public static final int REQUEST_EDIT = 2;
     public static final int REQUEST_PROFILE = 3;
-    private static final String TAG = ManageListActivity.class.getSimpleName();
+    private static final String TAG = App.TAG + ManageListActivity.class.getSimpleName();
 
     private RecyclerView mRecyclerView;
     private LinearLayoutManager mLayoutManager;
@@ -45,6 +56,11 @@ public class ManageListActivity extends AppCompatActivity {
         mAdapter = new StatementAdapter(this);
         // Connect the mAdapter with the recycler view.
         mRecyclerView.setAdapter(mAdapter);
+
+        // Loader
+        Log.d(TAG, "Activity : initLoader");
+        getLoaderManager().initLoader(0, null, this).forceLoad();
+
 
         // RecyclerView : Click management
         mRecyclerView.addOnItemTouchListener(
@@ -121,8 +137,8 @@ public class ManageListActivity extends AppCompatActivity {
                 } else {
                     mMenu.findItem(R.id.action_favori).setIcon(R.drawable.ic_action_favorite_full_white);
                 }
-                mAdapter.loadData();
-                mAdapter.notifyDataSetChanged();
+                Log.d(TAG, "Activity : restartLoader - favori");
+                getLoaderManager().restartLoader(0, null, this).forceLoad();
                 return true;
 
             default:
@@ -147,7 +163,7 @@ public class ManageListActivity extends AppCompatActivity {
                         data.getIntExtra(EditStatementActivity.EXTRA_STATUS, App.STATUS_NORMAL)
                 );
                 if (TextUtils.isEmpty(statement.getText())) {return;}
-                mAdapter.insertStatement(statement);
+                App.sBaseLocale.insertOneStatement(statement);
                 break;
             case REQUEST_EDIT:
                 statement = new Statement(
@@ -157,13 +173,13 @@ public class ManageListActivity extends AppCompatActivity {
                         data.getIntExtra(EditStatementActivity.EXTRA_STATUS, 0)
                 );
                 if (TextUtils.isEmpty(statement.getText())) {return;}
-                mAdapter.updateStatement(statement);
+                App.sBaseLocale.updateOneStatement(statement);
                 break;
             default:
                 break;
         }
-        mAdapter.loadData();
-        mAdapter.notifyDataSetChanged();
+        Log.d(TAG, "Activity : restartLoader - onActivityResult");
+        getLoaderManager().restartLoader(0, null, this).forceLoad();
     }
 
     // RecyclerView events : short click : Edit item
@@ -185,18 +201,57 @@ public class ManageListActivity extends AppCompatActivity {
     // RecyclerView events : long click : Toggle mark
     public void longClick(View v, int pos) {
         Statement s = mAdapter.getStatementFromPosition(pos);
-        mAdapter.toggleFavori(s);
-        mAdapter.loadData();
-        mAdapter.notifyDataSetChanged(); // MAJ de l'affichage
+        App.sBaseLocale.toggleStatutFavori(s);
+        Log.d(TAG, "Activity : restartLoader - long click");
+        getLoaderManager().restartLoader(0, null, this).forceLoad();
     }
 
     // RecyclerView events : Swipe : item suppression
     public void actionDelete(RecyclerView.ViewHolder viewHolder){
         int pos = viewHolder.getAdapterPosition();
         Statement s = mAdapter.getStatementFromPosition(pos);
-        mAdapter.removeStatement(s);
-        mAdapter.loadData();
+        App.sBaseLocale.removeOneStatement(s);
+        Log.d(TAG, "Activity : restartLoader - delete");
+        getLoaderManager().restartLoader(0, null, this).forceLoad();
+    }
+
+    /**
+     * Instantiate and return a new Loader for the given ID.
+     *
+     * @param id   The ID whose loader is to be created.
+     * @param args Any arguments supplied by the caller.
+     * @return Return a new Loader instance that is ready to start loading.
+     */
+    @Override
+    public Loader onCreateLoader(int id, Bundle args) {
+        Log.d(TAG, "Activity : callback onCreateLoader");
+        return new StatementArrayListLoader(this, App.sCurrentProfile, App.sScope);
+    }
+
+    /**
+     * Called when a previously created loader has finished its load.
+     *
+     * @param loader The Loader that has finished.
+     * @param data   The data generated by the Loader.
+     */
+    @Override
+    public void onLoadFinished(Loader<ArrayList<Statement>> loader, ArrayList<Statement> data) {
+        Log.d(TAG, "Activity : callback onLoadFinished, size = "+data.size());
+        mAdapter.setStatementList(data);
         mAdapter.notifyDataSetChanged();
     }
 
+    /**
+     * Called when a previously created loader is being reset, and thus
+     * making its data unavailable.  The application should at this point
+     * remove any references it has to the Loader's data.
+     *
+     * @param loader The Loader that is being reset.
+     */
+    @Override
+    public void onLoaderReset(Loader loader) {
+        Log.d(TAG, "Activity : callback onLoaderReset");
+        mAdapter.setStatementList(null);
+        mAdapter.notifyDataSetChanged();
+    }
 }

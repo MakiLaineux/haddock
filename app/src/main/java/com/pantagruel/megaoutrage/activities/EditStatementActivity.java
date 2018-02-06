@@ -45,8 +45,8 @@ public class EditStatementActivity extends AppCompatActivity {
     public static final String EXTRA_REQUEST = "com.pantagruel.unbrindled.REQUEST";
     public static final int REQUEST_ADD = 1;
     public static final int REQUEST_EDIT = 2;
+    private static final String TAG = App.TAG + EditStatementActivity.class.getSimpleName();
 
-    private final String TAG = this.getClass().getSimpleName();
     private EditText mEditTextView;
     private CheckBox[] mProfileCheckBox = new CheckBox[Profile.NB_CHECKBOX];
     private int mStatementStatus = App.STATUS_NORMAL;

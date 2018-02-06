@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 import com.pantagruel.megaoutrage.App;
+import com.pantagruel.megaoutrage.activities.ManageListActivity;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -18,7 +19,7 @@ import java.io.InputStreamReader;
 
 public class StatementDatabaseOpenHelper extends SQLiteOpenHelper {
 
-    private final String TAG = this.getClass().getSimpleName();
+    private static final String TAG = App.TAG + StatementDatabaseOpenHelper.class.getSimpleName();
 
     // string array of columns.
     private static final String[] COLUMNS = { StatementDatabase.STATEMENT_COL_ID, StatementDatabase.STATEMENT_COL_TEXT, StatementDatabase.STATEMENT_COL_PROFILE };

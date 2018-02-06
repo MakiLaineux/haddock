@@ -18,6 +18,7 @@ package com.pantagruel.megaoutrage.adapters;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,21 +26,22 @@ import android.widget.TextView;
 
 import com.pantagruel.megaoutrage.App;
 import com.pantagruel.megaoutrage.R;
+import com.pantagruel.megaoutrage.activities.ManageListActivity;
 import com.pantagruel.megaoutrage.data.Statement;
 
 import java.util.ArrayList;
 
 public class StatementAdapter extends RecyclerView.Adapter<StatementAdapter.StatementViewHolder> {
 
-    private final String TAG = this.getClass().getSimpleName();
     private final LayoutInflater mInflater;
     private ArrayList<Statement> mStatementList;
     private Context mContext;
+    private static final String TAG = App.TAG + StatementAdapter.class.getSimpleName();
 
     public StatementAdapter(Context context) {
         mContext = context;
-        loadData();
         mInflater = LayoutInflater.from(mContext);
+        Log.d(TAG, "Adapter : constructor");
     }
 
     @Override
@@ -51,7 +53,7 @@ public class StatementAdapter extends RecyclerView.Adapter<StatementAdapter.Stat
     @Override
     public void onBindViewHolder(StatementViewHolder holder, int position) {
 
-        // fill from the vector
+        // fill from the ArrayList
         holder.vhStatementText.setText(mStatementList.get(position).getText());
 
         // Color of the mark bar
@@ -66,8 +68,10 @@ public class StatementAdapter extends RecyclerView.Adapter<StatementAdapter.Stat
         return (mStatementList == null) ? 0 : mStatementList.size();
     }
 
-    public void loadData() {
-        mStatementList = App.sBaseLocale.getStatementList();
+
+    public void setStatementList(ArrayList<Statement> statementList) {
+        mStatementList = statementList;
+        Log.d(TAG, "Adapter : setStatementList, size = "+mStatementList.size());
     }
 
     public Statement getStatementFromPosition (int pos){
@@ -77,28 +81,8 @@ public class StatementAdapter extends RecyclerView.Adapter<StatementAdapter.Stat
             return mStatementList.get(pos);
     }
 
-    public boolean toggleFavori (Statement statement){
-        if (App.sBaseLocale.toggleStatutFavori(statement) == 1) return true;
-        else return false;
-    }
-
-    public void insertStatement(Statement statement) {
-        App.sBaseLocale.insertOneStatement(statement);
-        notifyDataSetChanged();
-    }
-
-    public void updateStatement(Statement statement) {
-        App.sBaseLocale.updateOneStatement(statement);
-        notifyDataSetChanged();
-    }
-
-    public void removeStatement(Statement statement) {
-        App.sBaseLocale.removeOneStatement(statement);
-        notifyDataSetChanged();
-    }
-
     /**
-     *  Custom view holder with a text view and two buttons.
+     *  Custom view holder
      */
     class StatementViewHolder extends RecyclerView.ViewHolder {
         final TextView vhStatementText;
@@ -109,5 +93,4 @@ public class StatementAdapter extends RecyclerView.Adapter<StatementAdapter.Stat
             vhStatementBarreFavori = itemView.findViewById(R.id.barrefavori);
         }
     }
-
 }

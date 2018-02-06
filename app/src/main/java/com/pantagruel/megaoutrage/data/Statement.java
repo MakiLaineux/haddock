@@ -4,9 +4,10 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.pantagruel.megaoutrage.App;
+import com.pantagruel.megaoutrage.activities.ManageListActivity;
 
 public class Statement implements Parcelable{
-	private static String TAG = Statement.class.getSimpleName();
+	private static final String TAG = App.TAG + Statement.class.getSimpleName();
 	private int mId;
 	private String mText;
 	private Profile mProfile;

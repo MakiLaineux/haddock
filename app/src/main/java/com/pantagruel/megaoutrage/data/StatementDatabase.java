@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import com.pantagruel.megaoutrage.App;
+import com.pantagruel.megaoutrage.activities.ManageListActivity;
 
 import java.util.ArrayList;
 
@@ -30,7 +31,8 @@ public class StatementDatabase {
     public static final String STATEMENT_COL_TEXT = "text";
     public static final String STATEMENT_COL_PROFILE = "profile";
     public static final String STATEMENT_COL_STATUS = "status";
-    private final String TAG = this.getClass().getSimpleName();
+    private static final String TAG = StatementDatabase.class.getSimpleName();
+
     private SQLiteDatabase mBdd;
     private StatementDatabaseOpenHelper mOpenHelper;
     private Cursor mCursor;
@@ -45,14 +47,14 @@ public class StatementDatabase {
         mBdd = mOpenHelper.getWritableDatabase();
     }
 
-    // Get an arraylist with all statements matching current status and profile
-    public ArrayList<Statement> getStatementList(){
+    // Get an arraylist with all statements matching given status and profile
+    public ArrayList<Statement> getStatementList(Profile profile, int scope){
         Statement s;
         ArrayList<Statement> v = new ArrayList<>();
 
         // First get a Cursor with records matching the status
         String where = null;
-        if (App.sScope == App.STATUS_MARKED)
+        if (scope == App.STATUS_MARKED)
             where = STATEMENT_COL_STATUS + " = " + Integer.toString(App.STATUS_MARKED);
         try {
             if (mBdd == null) {mBdd = mOpenHelper.getWritableDatabase();}
@@ -79,7 +81,7 @@ public class StatementDatabase {
                     mCursor.getString(STATEMENT_NUM_COL_PROFILE),
                     mCursor.getInt(STATEMENT_NUM_COL_STATUS)
             );
-            if (s.matchesProfile(App.sCurrentProfile))
+            if (s.matchesProfile(profile))
                 v.add(s);
             mCursor.moveToNext();
         }

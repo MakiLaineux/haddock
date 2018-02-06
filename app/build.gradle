@@ -4,7 +4,7 @@ android {
     compileSdkVersion 27
 
     defaultConfig {
-        applicationId "com.pantagruel.magaoutrage"
+        applicationId "com.pantagruel.megaoutrage"
         minSdkVersion 15
         targetSdkVersion 27
         versionCode 1
