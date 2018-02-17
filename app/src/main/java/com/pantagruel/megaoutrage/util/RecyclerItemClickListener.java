@@ -6,8 +6,9 @@ import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 
-// JC : pompé tel quel sur stackoverflow
-
+/*
+Class used to handle short and long clicks on one item of a RecyclerView
+ */
 public class RecyclerItemClickListener implements RecyclerView.OnItemTouchListener {
 
     public interface OnItemClickListener {

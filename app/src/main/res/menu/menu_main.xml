@@ -9,12 +9,6 @@
         android:icon="@drawable/ic_action_list_white"
         app:showAsAction="always" />
     <item
-        android:id="@+id/action_favori"
-        android:orderInCategory="200"
-        android:title="@string/action_favori"
-        android:icon="@drawable/ic_action_favorite_empty_white"
-        app:showAsAction="always" />
-    <item
         android:id="@+id/action_profile"
         android:orderInCategory="300"
         android:title="@string/action_profile"

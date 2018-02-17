@@ -5,10 +5,10 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.SystemClock;
 import android.util.Log;
 
 import com.pantagruel.megaoutrage.App;
-import com.pantagruel.megaoutrage.activities.ManageListActivity;
 
 import java.util.ArrayList;
 
@@ -47,15 +47,9 @@ public class StatementDatabase {
         mBdd = mOpenHelper.getWritableDatabase();
     }
 
-    // Get an arraylist with all statements matching given status and profile
-    public ArrayList<Statement> getStatementList(Profile profile, int scope){
+    // Get a statement from its db id
+    public Statement getStatementFromId(int id){
         Statement s;
-        ArrayList<Statement> v = new ArrayList<>();
-
-        // First get a Cursor with records matching the status
-        String where = null;
-        if (scope == App.STATUS_MARKED)
-            where = STATEMENT_COL_STATUS + " = " + Integer.toString(App.STATUS_MARKED);
         try {
             if (mBdd == null) {mBdd = mOpenHelper.getWritableDatabase();}
             if (mCursor != null) mCursor.close();
@@ -65,35 +59,96 @@ public class StatementDatabase {
                             STATEMENT_COL_PROFILE,
                             STATEMENT_COL_STATUS,
                     },
+                    STATEMENT_COL_ID + " = ? ", new String[]{String.valueOf(id)}, null, null, null);
+        } catch (Exception e) {
+            Log.e(App.TAG, "getStatementFromId EXCEPTION! " + e);
+            return null;
+        }
+        if (mCursor.getCount() == 0) return null;
+        mCursor.moveToFirst();
+        s = new Statement(
+                mCursor.getInt(STATEMENT_NUM_COL_ID),
+                mCursor.getString(STATEMENT_NUM_COL_TEXT),
+                mCursor.getString(STATEMENT_NUM_COL_PROFILE),
+                mCursor.getInt(STATEMENT_NUM_COL_STATUS)
+        );
+        return s;
+    }
+
+    // Check if the given text is already existing in a Statement
+    public boolean statementTextAlreadyExist(String text){
+        Statement s;
+        try {
+            if (mBdd == null) {mBdd = mOpenHelper.getWritableDatabase();}
+            if (mCursor != null) mCursor.close();
+            mCursor = mBdd.query(TABLE_STATEMENT, new String[]{
+                            STATEMENT_COL_TEXT,
+                    },
+                    STATEMENT_COL_TEXT + " = ? ", new String[]{text}, null, null, null);
+        } catch (Exception e) {
+            Log.e(App.TAG, "statementTextAlreadyExist EXCEPTION! " + e);
+            return false;
+        }
+        if (mCursor.getCount() == 0) return false;
+        else return true;
+    }
+
+    // Get an arraylist with all statements matching given status and profile
+    public ArrayList<Statement> getStatementList(Profile profile, int scope){
+        Statement s;
+        ArrayList<Statement> v = new ArrayList<>();
+
+        // for debug and testing
+        // SystemClock.sleep(2000);
+
+        // First get a Cursor with records matching the status
+        String where = null;
+        if (scope == Statement.STATUS_MARKED)
+            where = STATEMENT_COL_STATUS + " = " + Integer.toString(Statement.STATUS_MARKED);
+        try {
+            if (mBdd == null) {mBdd = mOpenHelper.getWritableDatabase();}
+            if (mCursor != null) mCursor.close();
+            Log.d(TAG, "get all statements, debut = ");
+            mCursor = mBdd.query(TABLE_STATEMENT, new String[]{
+                            STATEMENT_COL_ID,
+                            STATEMENT_COL_TEXT,
+                            STATEMENT_COL_PROFILE,
+                            STATEMENT_COL_STATUS,
+                    },
                     where, null, null, null, STATEMENT_COL_TEXT+" ASC");
+            Log.d(TAG, "get all statements, count 1 = "+mCursor.getCount());
+
+            if (mCursor.getCount() <1) {
+                Log.d(TAG, "get all statements, count 2 = "+mCursor.getCount());
+                return null;
+            }
+
+            // then fill the vector with items matching the profile
+            mCursor.moveToFirst();
+            for (int i = 0; i < mCursor.getCount(); i++) {
+                s = new Statement(
+                        mCursor.getInt(STATEMENT_NUM_COL_ID),
+                        mCursor.getString(STATEMENT_NUM_COL_TEXT),
+                        mCursor.getString(STATEMENT_NUM_COL_PROFILE),
+                        mCursor.getInt(STATEMENT_NUM_COL_STATUS)
+                );
+                if (s.matchesProfile(profile))
+                    v.add(s);
+                mCursor.moveToNext();
+            }
         } catch (Exception e) {
             Log.e(App.TAG, "GetAllStatements EXCEPTION! " + e);
             return null;
         }
-        if (mCursor == null) return null;
-
-        // then fill the vector with items matching the profile
-        mCursor.moveToFirst();
-        for (int i = 0; i < mCursor.getCount(); i++) {
-            s = new Statement(
-                    mCursor.getInt(STATEMENT_NUM_COL_ID),
-                    mCursor.getString(STATEMENT_NUM_COL_TEXT),
-                    mCursor.getString(STATEMENT_NUM_COL_PROFILE),
-                    mCursor.getInt(STATEMENT_NUM_COL_STATUS)
-            );
-            if (s.matchesProfile(profile))
-                v.add(s);
-            mCursor.moveToNext();
-        }
         return v;
     }
 
-    public int removeOneStatement(Statement statement) {
+    public int removeOneStatement(Statement s) {
         int deleted = 0;
         try {
             if (mBdd == null) {mBdd = mOpenHelper.getWritableDatabase();}
             deleted = mBdd.delete(TABLE_STATEMENT,
-                    STATEMENT_COL_ID + " = ? ", new String[]{String.valueOf(statement.getId())});
+                    STATEMENT_COL_ID + " = ? ", new String[]{String.valueOf(s.getId())});
         } catch (Exception e) {
             Log.e (App.TAG, "DELETE EXCEPTION! " + e.getMessage());
         }
@@ -124,7 +179,7 @@ public class StatementDatabase {
         ContentValues values = new ContentValues();
         values.put(STATEMENT_COL_TEXT, statement.getText());
         values.put(STATEMENT_COL_PROFILE, statement.getTextProfile());
-        values.put(STATEMENT_COL_STATUS, App.STATUS_NORMAL);
+        values.put(STATEMENT_COL_STATUS, Statement.STATUS_NORMAL);
         try {
             if (mBdd == null) {mBdd = mOpenHelper.getWritableDatabase();}
             newId = mBdd.insert(TABLE_STATEMENT, null, values);
@@ -143,10 +198,10 @@ public class StatementDatabase {
     public int toggleStatutFavori(Statement statement) {
         int newStatus;
         switch (statement.getStatus()) {
-            case App.STATUS_NORMAL :
-                newStatus = App.STATUS_MARKED; break;
-            case App.STATUS_MARKED :
-                newStatus = App.STATUS_NORMAL; break;
+            case Statement.STATUS_NORMAL :
+                newStatus = Statement.STATUS_MARKED; break;
+            case Statement.STATUS_MARKED :
+                newStatus = Statement.STATUS_NORMAL; break;
             default:
                 newStatus = statement.getStatus(); break;
         }

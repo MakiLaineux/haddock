@@ -10,6 +10,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.LinearInterpolator;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.pantagruel.megaoutrage.App;
@@ -19,14 +20,24 @@ import com.pantagruel.megaoutrage.data.Statement;
 import java.util.ArrayList;
 import java.util.Random;
 
+// Main activity
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = App.TAG + MainActivity.class.getSimpleName();
+
+    // request codes used to call startActivityForResult, checked in onActivityResult
     private final int REQUEST_LIST = 1;
     private final int REQUEST_PROFILE = 2;
+
+    // The statements to display
     private ArrayList<Statement> mStatementsStock;
+
+    // UI elements
     private ImageButton mButton;
     private TextView mTextView, mTextStock;
+    private LinearLayout mLinearLayoutDisplay;
     private Menu mMenu;
+
+    // Current text displayed
     private String mText;
 
     @Override
@@ -37,14 +48,20 @@ public class MainActivity extends AppCompatActivity {
         mTextView = findViewById(R.id.txt_statement);
         mTextStock = findViewById(R.id.txt_stock);
         mButton = findViewById(R.id.button_statement);
+        mLinearLayoutDisplay = findViewById(R.id.img_haddock);
 
+        // if necessary, reload parameters saved in onSaveInstanceState
         if (savedInstanceState != null) {
+            /* activate to start activity with current text, deactivate if display is animated
             mTextView.setText(savedInstanceState.getString("currentText"));
+            */
+            mTextView.setText("");
             mStatementsStock = savedInstanceState.getParcelableArrayList("currentList");
             mTextStock.setText(String.valueOf(mStatementsStock.size()));
         } else {
             loadStatements();
         }
+        mLinearLayoutDisplay.setBackgroundResource(R.drawable.captain2);
         mButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 actionClick();
@@ -52,14 +69,10 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    // Menu creation
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
-        if (App.sScope == App.SCOPE_FAVORITES){
-            menu.findItem(R.id.action_favori).setIcon(R.drawable.ic_action_favorite_empty_white);
-        } else {
-            menu.findItem(R.id.action_favori).setIcon(R.drawable.ic_action_favorite_full_white);
-        }
         mMenu = menu;
         return true;
     }
@@ -75,16 +88,9 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             case R.id.action_profile:
                 intent = new Intent(this, ProfileActivity.class);
+                // pass the calling activity to permit correct up navigation
+                intent.putExtra(ProfileActivity.CALLING_ACTIVITY, ProfileActivity.CALLING_ACTIVITY_MAIN);
                 startActivityForResult(intent, REQUEST_PROFILE);
-                return true;
-            case R.id.action_favori:
-                App.toggleScope();
-                if (App.sScope == App.SCOPE_FAVORITES){
-                    mMenu.findItem(R.id.action_favori).setIcon(R.drawable.ic_action_favorite_empty_white);
-                } else {
-                    mMenu.findItem(R.id.action_favori).setIcon(R.drawable.ic_action_favorite_full_white);
-                }
-                loadStatements();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -126,25 +132,46 @@ public class MainActivity extends AppCompatActivity {
         mText = s.getText();
         mTextView.setText("");
 
+        // display one animation that will triger a second
+        launchFirstAnimation();
+
+        // display and remove from stock
+        //mTextView.setText(s.getText());
+        mStatementsStock.remove(i);
+
+        mTextStock.setText(String.valueOf(mStatementsStock.size()));
+    }
+
+    private void launchFirstAnimation(){
         // icon animation
-        // Animation de l'icone synchro
         float deg = mButton.getRotation() + 360F;
         mButton.animate().rotation(deg).setDuration(1000).setInterpolator(new LinearInterpolator())
                 .setListener(new AnimatorListenerAdapter() {
                     @Override
                     public void onAnimationEnd(Animator animation) {
+                        mLinearLayoutDisplay.setBackgroundResource(R.drawable.captain1);
                         mTextView.setText(mText);
+                        launchSecondAnimation();
                     };
                 });;
-
-        // display and remove from stock
-        //mTextView.setText(s.getText());
-        mStatementsStock.remove(i);
-        mTextStock.setText(String.valueOf(mStatementsStock.size()));
     }
 
+    private void launchSecondAnimation(){
+        float deg = mButton.getRotation() + 360F;
+        mButton.animate().rotation(deg).setDuration(1000).setInterpolator(new LinearInterpolator())
+                .setListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        mLinearLayoutDisplay.setBackgroundResource(R.drawable.captain2);
+                        mTextView.setText("");
+                    };
+                });;
+    }
+
+     // this method could be modified to run in a separate thread
     private void loadStatements() {
-        mStatementsStock = App.sBaseLocale.getStatementList(App.sCurrentProfile, App.sScope);
+        // load only favorites
+        mStatementsStock = App.sBaseLocale.getStatementList(App.sCurrentProfile, Statement.SCOPE_FAVORITES);
         mTextView.setText("");
         if (mStatementsStock != null){
             mTextStock.setText(String.valueOf(mStatementsStock.size()));

@@ -2,6 +2,7 @@ package com.pantagruel.megaoutrage;
 
 import android.app.Application;
 
+import com.pantagruel.megaoutrage.data.Statement;
 import com.pantagruel.megaoutrage.data.StatementDatabase;
 import com.pantagruel.megaoutrage.data.Profile;
 
@@ -11,14 +12,6 @@ import com.pantagruel.megaoutrage.data.Profile;
 public class App extends Application {
 
     public static final String TAG = "STATEMENTS";  //pour debug
-
-    // Status conditions
-    public static final int STATUS_NORMAL = 0;
-    public static final int STATUS_MARKED = 1;
-
-    // Favorites conditions
-    public static final int SCOPE_ALL = 0;
-    public static final int SCOPE_FAVORITES = 1;
 
     // Named values
     public static final int NOID = -99;
@@ -44,9 +37,9 @@ public class App extends Application {
     static public void setCurrentProfile(Profile p){
         sCurrentProfile =p;}
     static public void setScope(boolean b){
-        sScope = b ? SCOPE_FAVORITES : SCOPE_ALL;
+        sScope = b ? Statement.SCOPE_FAVORITES : Statement.SCOPE_ALL;
     }
     static public void toggleScope(){
-        sScope = (sScope == SCOPE_FAVORITES) ? SCOPE_ALL : SCOPE_FAVORITES;
+        sScope = (sScope == Statement.SCOPE_FAVORITES) ? Statement.SCOPE_ALL : Statement.SCOPE_FAVORITES;
     }
 }

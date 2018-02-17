@@ -7,16 +7,14 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 import com.pantagruel.megaoutrage.App;
-import com.pantagruel.megaoutrage.activities.ManageListActivity;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
 /**
- * Created by MAKI LAINEUX on 16/01/2018.
+ * Database Open Helper
  */
-
 public class StatementDatabaseOpenHelper extends SQLiteOpenHelper {
 
     private static final String TAG = App.TAG + StatementDatabaseOpenHelper.class.getSimpleName();
@@ -41,6 +39,7 @@ public class StatementDatabaseOpenHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(STATEMENT_LIST_TABLE_CREATE);
+        // on database creation : init content
         fillDatabaseWithData(db);
     }
 
@@ -63,10 +62,10 @@ public class StatementDatabaseOpenHelper extends SQLiteOpenHelper {
                 if (ligne.length() <= Profile.NB_CHECKBOX) continue;
                 String strProfile = ligne.substring(0,13);
                 String strText = ligne.substring(13);
-                Statement statement = new Statement(App.NOID, strText, strProfile, App.STATUS_NORMAL);
+                Statement statement = new Statement(App.NOID, strText, strProfile, Statement.STATUS_MARKED);
                 values.put(StatementDatabase.STATEMENT_COL_TEXT, statement.getText());
                 values.put(StatementDatabase.STATEMENT_COL_PROFILE, statement.getTextProfile());
-                values.put(StatementDatabase.STATEMENT_COL_STATUS, App.STATUS_NORMAL);
+                values.put(StatementDatabase.STATEMENT_COL_STATUS, Statement.STATUS_MARKED);
                 db.insert(StatementDatabase.TABLE_STATEMENT, null, values);
             }
             bOK=true;

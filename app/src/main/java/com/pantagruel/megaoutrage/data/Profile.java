@@ -8,30 +8,67 @@ import android.util.Log;
 
 import com.pantagruel.megaoutrage.App;
 import com.pantagruel.megaoutrage.activities.ManageListActivity;
+import com.pantagruel.megaoutrage.util.ProfileFormatException;
 
 /**
- * Created by MAKI LAINEUX on 17/01/2018.
+ * A class defining the possible usages of a statement
+ *
+ * A Profile object stores the usages that can be made with a Statement. It can be seen as a list of
+ * booleans, each representing whether a specific condition is met.
+ *
+ * Specific conditions can be of three types :
+ * - Nature conditions. Linked with the semantic domain of the Statement, for example "animals", "vegetals", etc.
+ * A statement must be compatible with at least one nature condition
+ * - Style conditions. Linked with the language style, for example "scientific", "old-style", etc.
+ * A statement must be compatible with at least one style condition
+ * - Criteria conditions, for example "funny", "green", "asiatic", etc. A statement must be compatible
+ * with at least one nature condition
+ *
+ * Each Statement necessarily owns a Profile. In addition, Profile objects can be used to check if a given
+ * Statement is acceptable for a specific usage. To achieve this, build a Profile object representing this specific usage,
+ * and check with the matches method whether the Statement's Profile is compatible
+ *
  */
-
 public class Profile {
 
+    /**
+     * Used as a prefix to store in SharedPreferences a set of booleans representing the current profile
+     */
     public static final String PROFILE_BOOL = "ProfileBool";
 
-    // must match the number of boolean members of the class
+    /**
+     * The total number of specific usages in the profile
+     */
     public static final int NB_CHECKBOX = 13;
+
+    /**
+     * Common prefix for the ids of the checkboxes defined in xml
+     */
     public static final String CHECKBOXNAME = "checkbox";
 
-    // order of the flags : nature flags, then style flags, then criteria flags
+    /* The sum of those three constants must match the total number of boolean members.
+    For storage and display, the order is : nature flags, then style flags, then criteria flags */
     private static final int NB_CHECKBOX_NATURE = 3;
     private static final int NB_CHECKBOX_STYLE = 3;
     private static final int NB_CHECKBOX_CRITERIA = 7;
 
     private static final String TAG = App.TAG + ContactsContract.Profile.class.getSimpleName();
 
+    /* A profile object is essentially defined by this array of booleans */
     private boolean[] mFlag = new boolean[NB_CHECKBOX];
 
-    public Profile(){}
+    /**
+     * Default constructor, no parameters, all usages are allowed
+     */
+    public Profile(){
+        for (int i = 0; i < NB_CHECKBOX; i++)
+            this.mFlag[i] = true;
+    }
 
+    /**
+     * Constructor setting allowed usages using values passed in a array
+     * @param boolArray an array of NB_CHECKBOX booleans, pass "true" to allow each usage
+     */
     public Profile(boolean[] boolArray){
         this.mFlag = boolArray;
     }
@@ -39,7 +76,8 @@ public class Profile {
     /**
      * Returns a string of fixed length. Each char represent a boolean member of the object.
      *
-     * @return a string whose chars represent booleans, with true = 'X', false = ' '.
+     * @return a string of length NB_CHECKBOX whose chars represent each a condition. The char is
+     * 'X' if the condition is met, ' ' otherwise.
      */
     @Override
     public String toString() {
@@ -52,22 +90,48 @@ public class Profile {
         return(buffer.toString());
     }
 
+    /**
+     * Checks whether a specific usage condition is allowed
+     * @param i number of the usage to check
+     * @return true if the usage is allowed
+     */
     public boolean isChecked(int i){return mFlag[i];}
 
+    /**
+     * Updates a usage
+     * @param i number of the specific usage condition to set
+     * @param b true if this specific usage is allowed
+     */
     public void setChecked(int i, boolean b){mFlag[i]=b;}
 
-    public void feedFromString (String s){
-        if (s.length() != NB_CHECKBOX) {
-            Log.e(App.TAG, "feedFromString : String length does not match Profile length : Z" + s + "Z" );
-            return;           
-        }
-        else
-            //Log.d(App.TAG, "feedFromString : Profile : Z" + s + "Z");
-        for (int i =0 ; i < NB_CHECKBOX ; i++)
-            this.mFlag[i] = (s.charAt(i) == 'X');
+    /**
+     * Set a Profile's content by updating all its possible usages.
+     * @param s a string of length NB_CHECKBOX whose chars represent each a usage.
+     *          The char is 'X' if the usage is allowed, ' ' otherwise.
+     *          If the length of the argument differs from NB_CHECKBOX, a
+     *          ProfileFormatException is thrown
+     */
+    void feedFromString (String s) throws ProfileFormatException{
+            if ((s == null) || (s.length() != NB_CHECKBOX)) {
+                throw new ProfileFormatException();
+            }
+            for (int i = 0; i < NB_CHECKBOX; i++)
+                this.mFlag[i] = (s.charAt(i) == 'X');
     }
 
-    // build profile from user preferences
+    /**
+     * Reset the profile, all usages are set to "allowed"
+     */
+    public void clear () {
+        for (int i = 0; i < NB_CHECKBOX; i++)
+            this.mFlag[i] = true;
+    }
+
+    /**
+     * Read the user preferences for the profile, and copy them into the current Profile object.
+     * The user preferences are stored in SharedPreferences
+     * @param context a context to access the SharedPreferences
+     */
     public void feedFromPreferences(Context context){
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
         for (int i = 0; i<Profile.NB_CHECKBOX ; i++) {
@@ -77,6 +141,14 @@ public class Profile {
     }
 
 
+    /**
+     * Checks whether the specified Profile is compatible with the current Prodile object.
+     * Two profiles are compatible if they both share at least one common nature,
+     * at least one common style, and at least one common criteria
+     *
+     * @param p Profile whose compatibility is to be checked
+     * @return true if both Profile are compatible
+     */
     public boolean matches(Profile p){
         // returns true if natures match, styles also match, and criterias also match
 
