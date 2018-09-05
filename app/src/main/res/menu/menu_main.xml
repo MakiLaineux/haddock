@@ -1,0 +1,17 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.pantagruel.myapplication.MainActivity">
+    <item
+        android:id="@+id/action_list"
+        android:orderInCategory="100"
+        android:title="@string/action_list"
+        android:icon="@drawable/ic_action_list_white"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/action_profile"
+        android:orderInCategory="300"
+        android:title="@string/action_profile"
+        android:icon="@drawable/ic_action_profile_white"
+        app:showAsAction="always" />
+</menu>

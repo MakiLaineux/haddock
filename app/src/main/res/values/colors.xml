@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright 2016 Google Inc.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License. -->
+
+<resources>
+    <color name="color_primary">@color/color_main_medium_3</color>
+    <color name="color_primary_dark">@color/color_main_dark_1</color>
+    <color name="color_primary_light">@color/color_main_light_2</color>
+    <color name="color_accent">@color/color_second</color>
+    <color name="color_primary_text">@color/color_gray_dark</color>
+    <color name="color_secondary_text">@color/color_gray_medium</color>
+    <color name="color_divider">@color/color_gray_light</color>
+
+    <!-- App colors -->
+
+    <color name="color_fond">@color/color_main_light_1</color>
+    <color name="color_card_light">@color/color_main_light_2</color>
+    <color name="color_card_accent">@color/color_main_medium_1</color>
+    <color name="color_marked">@color/color_second</color>
+
+    <!-- Palette colors - for internal use only -->
+
+    <!-- Main color variations -->
+    <color name="color_main_light_1">#EFEBE9</color>
+    <color name="color_main_light_2">#DCCCC8</color>
+    <color name="color_main_light_3">#BCAAA4</color>
+    <color name="color_main_medium_1">#A1887F</color>
+    <color name="color_main_medium_2">#8D6E63</color>
+    <color name="color_main_medium_3">#795548</color>
+    <color name="color_main_medium_4">#6D4C41</color>
+    <color name="color_main_dark_1">#5D4037</color>
+    <color name="color_main_dark_2">#4E342E</color>
+    <color name="color_main_dark_3">#3E2723</color>
+
+    <!-- Second color -->
+    <color name="color_second">#536DFE</color>
+
+    <!-- Third color variations -->
+    <color name="color_third">#FFEB3B</color>
+
+
+    <!-- Gray colors -->
+    <color name="color_gray_light">#BDBDBD</color>
+    <color name="color_gray_medium">#757575</color>
+    <color name="color_gray_dark">#212121</color>
+</resources>

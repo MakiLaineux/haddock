@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- French version  -->
+
+<resources>
+    <string name="app_name_short">Haddock</string>
+    <string name="app_name">Capitaine Haddock</string>
+    <string name="hint_word">Entrez votre outrage ici</string>
+    <string name="lib_profile">Profil</string>
+
+    <!-- Menu actions  -->
+    <string name="action_list">Liste</string>
+    <string name="action_profile">Profilage</string>
+    <string name="action_valid_statement">OK</string>
+    <string name="action_valid_profile">OK</string>
+    <string name="action_favori">Favoris</string>
+
+    <!-- Profiling -->
+    <string name="nature">Cible</string>
+    <string name="nature1">Homme</string>
+    <string name="nature2">Femme</string>
+    <string name="nature3">Enfant</string>
+    <string name="styles">Style</string>
+    <string name="styles1">D\ésuet</string>
+    <string name="styles2">Ordinaire</string>
+    <string name="styles3">Vulgaire</string>
+    <string name="criteria">Atteintes</string>
+    <string name="criteria1">Physique</string>
+    <string name="criteria2">Capacit\és</string>
+    <string name="criteria3">Vie sexuelle</string>
+    <string name="criteria4">Ethnique</string>
+    <string name="criteria5">Vices</string>
+    <string name="criteria6">Animalit\é</string>
+    <string name="criteria7">Divers</string>
+    <string name="message_statement_empty">Le texte doit contenir au moins une lettre - Op\ération annul\ée</string>
+    <string name="message_statement_already_exists">Le texte existe d\éj\à - Op\ération annul\ée</string>
+
+</resources>

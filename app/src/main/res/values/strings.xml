@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- International version (english)  -->
+
+<resources>
+    <string name="app_name_short">Haddock</string>
+    <string name="app_name">Captain Haddock</string>
+    <string name="hint_word">Enter your statement here</string>
+    <string name="lib_profile">Profile</string>
+
+    <!-- Menu actions  -->
+    <string name="action_list">List</string>
+    <string name="action_profile">Profile</string>
+    <string name="action_valid_statement">OK</string>
+    <string name="action_valid_profile">OK</string>
+    <string name="action_favori">Favorites</string>
+
+    <!-- Profiling -->
+    <string name="nature">Target</string>
+    <string name="nature1">Man</string>
+    <string name="nature2">Woman</string>
+    <string name="nature3">Child</string>
+    <string name="styles">Style</string>
+    <string name="styles1">Old style</string>
+    <string name="styles2">Normal</string>
+    <string name="styles3">Vulgar</string>
+    <string name="criteria">Categories</string>
+    <string name="criteria1">Anatomy</string>
+    <string name="criteria2">Abilities</string>
+    <string name="criteria3">Sexual life</string>
+    <string name="criteria4">Ethnic</string>
+    <string name="criteria5">Defects</string>
+    <string name="criteria6">Animals</string>
+    <string name="criteria7">Various</string>
+    <string name="message_statement_empty">Text must contain at least one letter - not saved</string>
+    <string name="message_statement_already_exists">Text already exists - not saved</string>
+
+</resources>

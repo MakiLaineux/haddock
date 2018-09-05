@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.pantagruel.megaoutrage">
+
+    <application
+        android:name="com.pantagruel.megaoutrage.App"
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_haddock_launcher"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity
+            android:name=".activities.MainActivity"
+            android:label="@string/app_name">
+            <intent-filter android:label="@string/app_name_short">
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.pantagruel.megaoutrage.activities.ManageListActivity"
+            android:parentActivityName="com.pantagruel.megaoutrage.activities.MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.pantagruel.megaoutrage.activities.MainActivity" />
+        </activity>
+        <activity
+            android:name="com.pantagruel.megaoutrage.activities.EditStatementActivity"
+            android:parentActivityName="com.pantagruel.megaoutrage.activities.ManageListActivity"
+            android:windowSoftInputMode="stateHidden">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.pantagruel.megaoutrage.activities.ManageListActivity" />
+        </activity>
+        <activity android:name="com.pantagruel.megaoutrage.activities.ProfileActivity"
+            android:parentActivityName="com.pantagruel.megaoutrage.activities.MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.pantagruel.megaoutrage.activities.MainActivity" />
+        </activity>
+    </application>
+
+</manifest>
